@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Achiote — Reconstruct a food memory</title>
+  <meta name="description" content="Describe a half-remembered dish and Achiote will investigate it — weighing sources, separating evidence from inference, and giving you one small taste to test the memory." />
+  <link rel="canonical" href="https://achiote.kyanitelabs.tech/app" />
+  <meta property="og:title" content="Achiote — Reconstruct a food memory" />
+  <meta property="og:description" content="A food-memory researcher that investigates instead of guessing." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://achiote.kyanitelabs.tech/app" />
+  <link rel="icon" href="proof/favicon.svg" />
+  <link rel="stylesheet" href="site.css" />
+  <style>
+    .app-hero { padding: clamp(40px, 6vw, 72px) 0 var(--s6); }
+    .app-hero h1 { font-size: clamp(2.6rem, 6vw, 4.4rem); font-weight: 360; line-height: 0.96; letter-spacing: -0.02em; margin: var(--s3) 0 0; }
+    .app-hero h1 em { font-style: italic; color: var(--oxblood); font-weight: 380; }
+    .app-hero .lead { max-width: 580px; margin: var(--s5) 0 0; }
+
+    .console { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 0.86fr); gap: clamp(24px, 4vw, 48px); align-items: start; padding-bottom: var(--s9); }
+    @media (max-width: 900px) { .console { grid-template-columns: 1fr; } }
+
+    .field-label { font-size: 0.74rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-mute); }
+    .app-input {
+      width: 100%; margin-top: var(--s3); padding: var(--s5); min-height: 168px; resize: vertical;
+      border: 1px solid var(--line-strong); border-radius: var(--r-md); background: #fffdf8; color: var(--ink);
+      font: inherit; font-size: 1.05rem; line-height: 1.5;
+      transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+    }
+    .app-input::placeholder { color: #a8967f; }
+    .app-input:focus-visible { outline: none; border-color: var(--ochre); box-shadow: 0 0 0 4px rgba(181,131,44,0.16); }
+
+    .chips { display: flex; flex-wrap: wrap; gap: var(--s2); margin-top: var(--s4); }
+    .chip {
+      font: inherit; font-size: 0.82rem; cursor: pointer; padding: 7px 14px; border-radius: var(--r-full);
+      border: 1px solid var(--line-strong); background: transparent; color: var(--ink-soft);
+      transition: background var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+    }
+    .chip:hover { background: var(--ink); color: var(--paper-0); border-color: var(--ink); }
+
+    .app-actions { display: flex; align-items: center; gap: var(--s4); margin-top: var(--s5); flex-wrap: wrap; }
+    .app-note { font-size: 0.8rem; color: var(--ink-mute); }
+
+    .auth-row { margin-top: var(--s4); display: none; gap: var(--s3); align-items: center; flex-wrap: wrap; }
+    .auth-row.show { display: flex; }
+    .auth-row input { padding: 10px 14px; border: 1px solid var(--line-strong); border-radius: var(--r-full); font: inherit; background: #fffdf8; min-width: 220px; }
+    .auth-row .hint { font-size: 0.8rem; color: var(--oxblood); }
+
+    .app-output { position: sticky; top: 92px; }
+    .receipt-paper {
+      position: relative; padding: var(--s6) 30px;
+      background: linear-gradient(90deg, transparent 0 116px, rgba(156,42,22,0.10) 116px 118px, transparent 118px),
+        repeating-linear-gradient(0deg, transparent 0 31px, rgba(27,19,11,0.10) 31px 32px), #fff8ea;
+      border: 1px solid var(--line-strong); border-radius: 3px; box-shadow: 0 28px 56px rgba(96,63,34,0.16);
+    }
+    .receipt-paper h3 { margin: 0 0 var(--s2); font-size: 1.3rem; font-weight: 460; }
+    .receipt-meta { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-mute); margin: 0 0 var(--s5); }
+    .receipt-group { margin: var(--s4) 0 0; }
+    .receipt-group .label { display:block; color: var(--ink-mute); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
+    .receipt-group ul { margin: 0; padding-left: 1.05em; font-size: 0.92rem; color: var(--ink-soft); }
+    .receipt-group li { margin: 3px 0; }
+    .first-taste { margin-top: var(--s5); padding-top: var(--s4); border-top: 1px solid var(--line); }
+    .first-taste .label { color: var(--oxblood); }
+    .first-taste .cue { font-family: "Fraunces", Georgia, serif; font-optical-sizing: auto; font-style: italic; color: #5a3f2d; font-size: 1.02rem; line-height: 1.45; }
+    .app-answer { margin-top: var(--s5); padding: var(--s5); border: 1px solid var(--line); border-radius: var(--r-md); background: var(--card); line-height: 1.62; font-size: 0.96rem; color: var(--ink-soft); }
+    .app-answer strong { color: var(--ink); }
+
+    .placeholder-receipt { border: 1px dashed var(--line-strong); border-radius: var(--r-md); padding: var(--s7) var(--s6); text-align: center; color: var(--ink-mute); background: rgba(255,251,243,0.4); }
+    .placeholder-receipt .mark { font-family: "Fraunces", serif; font-style: italic; font-size: 1.2rem; color: var(--ochre); }
+    .is-loading .app-send { opacity: 0.7; pointer-events: none; }
+    .demo-flag { display:inline-block; margin-top: var(--s4); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ochre); font-weight: 700; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="/"><span class="dot" aria-hidden="true"></span>Achiote</a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="/">Home</a>
+        <a href="app.html" aria-current="page">How it works</a>
+        <a href="week6.html">The proof</a>
+        <a class="btn btn-primary" href="#start">Start <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="app-hero">
+      <div class="container">
+        <p class="eyebrow">The researcher, working</p>
+        <h1>Describe what you<br />remember. We'll <em>investigate.</em></h1>
+        <p class="lead">No name, no recipe, no shared language required. Give Achiote a fragment — a sound, a smell, a color — and it returns a Memory Receipt with one small taste to try first.</p>
+      </div>
+    </section>
+
+    <section class="container console" id="start">
+      <div>
+        <label class="field-label" for="memory">Your memory</label>
+        <textarea id="memory" class="app-input" rows="6" placeholder="My grandma made something that sounded like 'pass-teh-lay.' Savory, wrapped in a leaf. I don't speak Spanish. I live near Orlando."></textarea>
+        <div class="chips" aria-label="Try an example">
+          <button class="chip" type="button">A leaf-wrapped savory bite I can't name</button>
+          <button class="chip" type="button">A cold, cinnamon rice drink over ice</button>
+          <button class="chip" type="button">A sweet white thing my aunt made</button>
+        </div>
+        <div class="app-actions">
+          <button id="send" class="btn btn-primary app-send" type="button">Reconstruct the memory <span class="arrow" aria-hidden="true">&rarr;</span></button>
+          <span class="app-note">Free · no signup · your words stay your words</span>
+        </div>
+        <div class="auth-row" id="authRow">
+          <span class="hint">This server is gated. Enter the demo password to continue:</span>
+          <input id="demoPw" type="password" placeholder="Demo password" autocomplete="off" />
+          <button class="btn btn-ghost" id="retry" type="button">Continue</button>
+        </div>
+      </div>
+
+      <div class="app-output" id="output" aria-live="polite">
+        <div class="placeholder-receipt">
+          <p class="mark">Your Memory Receipt appears here.</p>
+          <p>What you said · what was researched · what's inferred · what's unknown · and the first taste to try.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span class="footer-brand">Achiote</span>
+      <p>Research-first food-memory reconstruction. Powered by an evidence-bounded research workflow — it weighs sources, marks the unknowns, and never invents your family's recipe.</p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var ASK = '/ask';                 // same-origin (served from achiote.kyanitelabs.tech)
+      var input = document.getElementById('memory');
+      var send = document.getElementById('send');
+      var output = document.getElementById('output');
+      var authRow = document.getElementById('authRow');
+      var demoPw = document.getElementById('demoPw');
+      var retry = document.getElementById('retry');
+      var body = document.body;
+      var history = [];
+
+      var CHIP_MAP = {
+        "A leaf-wrapped savory bite I can't name": "My Puerto Rican grandma made something that sounded like 'pass-teh-lay.' Savory, pork maybe, wrapped in a leaf. I don't speak Spanish. I live near Orlando.",
+        "A cold, cinnamon rice drink over ice": "A cold rice drink from childhood. Cinnamon smell, thin but a little starchy, served over ice. My family is from Mexico but I don't know the name. I'm in Minneapolis.",
+        "A sweet white thing my aunt made": "My aunt made a sweet white thing. I think from India. Soft, milky, maybe cardamom. I miss it."
+      };
+      document.querySelectorAll('.chip').forEach(function (c) {
+        c.addEventListener('click', function () { input.value = CHIP_MAP[c.textContent] || c.textContent; input.focus(); });
+      });
+
+      function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+      function md(s){ return esc(s).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>'); }
+
+      // Parse one COMPLETE SSE event block (delimited by a blank line) into {type, data}.
+      // Buffering whole blocks avoids losing the event type when a chunk boundary
+      // falls between the `event:` and `data:` lines.
+      function parseBlock(block) {
+        var type = 'message', dataLines = [];
+        var lines = block.split(/\r?\n/);
+        for (var i = 0; i < lines.length; i++) {
+          var line = lines[i];
+          if (line.indexOf(':') === 0) continue;            // SSE comment line
+          if (line.indexOf('event:') === 0) type = line.slice(6).trim();
+          else if (line.indexOf('data:') === 0) dataLines.push(line.slice(5).replace(/^ /, ''));
+        }
+        return { type: type, data: dataLines.join('\n') };
+      }
+
+      function authHeaders() {
+        var h = { 'Content-Type': 'application/json' };
+        var key = localStorage.getItem('achiote-api-key');
+        var pw = (demoPw.value || localStorage.getItem('achiote-demo-password') || '').trim();
+        if (key) h['x-api-key'] = key;
+        else if (pw) { h['x-demo-password'] = pw; localStorage.setItem('achiote-demo-password', pw); }
+        return h;
+      }
+
+      function list(items) {
+        if (!Array.isArray(items) || !items.length) return '';
+        return '<ul>' + items.map(function (i) { return '<li>' + esc(i) + '</li>'; }).join('') + '</ul>';
+      }
+
+      function group(label, items, extraClass) {
+        if (!Array.isArray(items) || !items.length) return '';
+        return '<div class="receipt-group ' + (extraClass || '') + '"><span class="label">' + esc(label) + '</span>' + list(items) + '</div>';
+      }
+
+      function receiptHTML(r, demo) {
+        var ev = r.evidence || {};
+        var taste = r.firstTinyTasteTest;
+        var html = '<div class="receipt-paper"><h3>Memory Receipt</h3><p class="receipt-meta">' +
+          (demo ? 'Sample preview' : 'Generated from your memory') + '</p>';
+        html += group('You said', ev.userSaid);
+        html += group('Researched', ev.researched);
+        html += group('Inferred', ev.inferred);
+        html += group('Still unknown', ev.unknown);
+        if (taste && (taste.cue || taste.title)) {
+          html += '<div class="first-taste"><span class="label">First taste' + (taste.estimatedTime ? ' · ' + esc(taste.estimatedTime) : '') + '</span>' +
+            '<p class="cue">' + esc(taste.cue || taste.title) + '</p></div>';
+        }
+        html += '</div>';
+        return html;
+      }
+
+      function renderFinal(text, receipt, demo) {
+        var html = '';
+        if (receipt) html += receiptHTML(receipt, demo);
+        if (text) html += '<div class="app-answer">' + md(text) + '</div>';
+        if (demo) html += '<span class="demo-flag">Showing a sample — couldn’t reach the live researcher. Tap Reconstruct to retry.</span>';
+        output.innerHTML = html || '<div class="app-answer">No result returned. Try rephrasing.</div>';
+      }
+
+      var SAMPLE_TEXT = "What I am hearing: a leaf-wrapped, savory, green-starch dish from a Puerto Rican kitchen — \"pass-teh-lay\" is a clue worth keeping, not a spelling to correct.\n\n**Before any specialty shopping**, the first taste below tests whether the memory lives in the pasteles family. If it lands, the next step is to compare regional masa (green banana vs. yautía) and ask family whether it was steamed or boiled.";
+      var SAMPLE_RECEIPT = {
+        evidence: {
+          userSaid: ['Puerto Rican grandma', 'sounded like "pass-teh-lay"', 'savory, possibly pork', 'wrapped in a leaf', 'near Orlando'],
+          researched: ['Puerto Rican pasteles use a green-banana/root masa', 'leaf wrappers trap steam and aroma', 'pork is a common filling'],
+          inferred: ['Likely a leaf-wrapped masa family dish', 'pork is probably the filling, not the body'],
+          unknown: ['Exact masa (green banana vs. yautía)', 'spice profile', 'steamed vs. boiled']
+        },
+        firstTinyTasteTest: {
+          title: 'Green-starch + pork + wrapped aroma',
+          estimatedTime: '10 min',
+          cue: 'Mash boiled green plantain with salt, oil, and garlic. Warm it beside a spoon of browned pork. Wrap one bite in parchment for a minute so the aroma is trapped — this tests savory green-starch, pork aroma, and the wrapped-food ritual at once.'
+        }
+      };
+
+      function setLoading(on) {
+        if (on) { body.classList.add('is-loading'); send.textContent = 'Researching…'; }
+        else { body.classList.remove('is-loading'); send.innerHTML = 'Reconstruct the memory <span class="arrow" aria-hidden="true">&rarr;</span>'; }
+      }
+
+      async function ask() {
+        var message = input.value.trim();
+        if (!message) { input.focus(); return; }
+        setLoading(true);
+        output.innerHTML = '<div class="placeholder-receipt"><p class="mark">Investigating your memory…</p><p>Weighing sources, separating evidence from inference.</p></div>';
+        try {
+          var res = await fetch(ASK, {
+            method: 'POST',
+            headers: authHeaders(),
+            body: JSON.stringify({ message: message, history: history, consent: { qualitySignals: false } })
+          });
+          if (res.status === 401) { authRow.classList.add('show'); output.innerHTML = '<div class="placeholder-receipt"><p class="mark">This server is gated.</p><p>Enter the demo password above, then run it again.</p></div>'; setLoading(false); return; }
+          if (!res.ok) throw new Error('status ' + res.status);
+
+          var reader = res.body.getReader();
+          var dec = new TextDecoder();
+          var buf = '', text = '', receipt = null;
+
+          function dispatch(block) {
+            if (!block.trim()) return;
+            var e = parseBlock(block);
+            if (!e.data) return;
+            var d;
+            try { d = JSON.parse(e.data); } catch (_) { return; }
+            if (e.type === 'text') { text += (typeof d === 'string' ? d : (d.message || d.text || '')); output.innerHTML = '<div class="app-answer">' + md(text) + '</div>'; }
+            else if (e.type === 'receipt') { receipt = d; }
+            else if (e.type === 'error') { throw new Error(d.message || d.error || 'stream error'); }
+          }
+
+          while (true) {
+            var r = await reader.read();
+            if (r.done) break;
+            buf += dec.decode(r.value, { stream: true });
+            // Split on the blank-line delimiter, tolerant of LF or CRLF even when a
+            // chunk boundary lands inside the delimiter. The trailing element is the
+            // (possibly incomplete) next event and stays buffered.
+            var parts = buf.split(/\r?\n\r?\n/);
+            buf = parts.pop();
+            for (var i = 0; i < parts.length; i++) dispatch(parts[i]);
+          }
+          if (buf.trim()) dispatch(buf);                      // flush a trailing event with no blank line
+          history = (history || []).concat([{ role: 'user', content: message }, { role: 'assistant', content: text }]).slice(-20);
+          renderFinal(text, receipt, false);
+        } catch (err) {
+          // Graceful fallback so the page is never broken (local preview / unreachable API)
+          renderFinal(SAMPLE_TEXT, SAMPLE_RECEIPT, true);
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      send.addEventListener('click', ask);
+      retry.addEventListener('click', ask);
+      input.addEventListener('keydown', function (e) { if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') ask(); });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate static site + folder
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Required files exist
+        run: |
+          set -euo pipefail
+          required=(
+            index.html
+            app.html
+            week6.html
+            site.css
+            README.md
+            identity.md
+            rules.md
+            examples.md
+            reference/workflow.md
+            reference/evidence-ledger.md
+            reference/source-quality-ladder.md
+            reference/sensory-mechanisms.md
+            reference/local-access-playbook.md
+            reference/language-switching.md
+            reference/quality-gates.md
+          )
+          missing=0
+          for f in "${required[@]}"; do
+            if [ ! -f "$f" ]; then echo "::error file=$f::missing required file"; missing=1; fi
+          done
+          [ "$missing" -eq 0 ] && echo "All required files present."
+
+      - name: HTML sanity (doctype, title, closing tags)
+        run: |
+          set -euo pipefail
+          for f in index.html app.html week6.html; do
+            grep -qi "<!doctype html>" "$f" || { echo "::error file=$f::missing <!doctype html>"; exit 1; }
+            grep -qi "</html>" "$f"         || { echo "::error file=$f::missing </html>"; exit 1; }
+            grep -qi "<title>" "$f"         || { echo "::error file=$f::missing <title>"; exit 1; }
+          done
+          echo "HTML sanity passed."
+
+      - name: Inline app script parses (no syntax errors)
+        run: |
+          set -euo pipefail
+          # Extract the inline <script> from app.html and check it parses under Node.
+          node -e '
+            const fs = require("fs");
+            const html = fs.readFileSync("app.html", "utf8");
+            const m = html.match(/<script>([\s\S]*?)<\/script>/i);
+            if (!m) { console.error("No inline <script> found in app.html"); process.exit(1); }
+            const vm = require("vm");
+            new vm.Script(m[1], { filename: "app.html#script" });
+            console.log("app.html inline script parses OK");
+          '
+
+      - name: Endpoint consistency (app must call /ask, never /api/ask)
+        run: |
+          set -euo pipefail
+          if grep -rn "api/ask" --include=*.html --include=*.md .; then
+            echo "::error::Found /api/ask reference; the live server endpoint is /ask"
+            exit 1
+          fi
+          grep -q "'/ask'" app.html || { echo "::error file=app.html::app.html must POST to /ask"; exit 1; }
+          echo "Endpoint usage consistent."
+
+      - name: No leaked secrets
+        run: |
+          set -euo pipefail
+          # Block obvious key shapes from ever entering the static site.
+          if grep -rnE "sk-[A-Za-z0-9]{16,}|GLM_API_KEY|ANTHROPIC_API_KEY|x-api-key:\s*[A-Za-z0-9]{8,}" \
+               --include=*.html --include=*.css --include=*.js --include=*.md .; then
+            echo "::error::Possible secret committed to the static site"
+            exit 1
+          fi
+          echo "No secret-shaped strings found."
+
+      - name: No-process-leak guard (planning-only references stay out of shipped artifacts)
+        run: |
+          set -euo pipefail
+          if grep -rniE "ratatouille|anton ego" \
+               --include=*.html --include=*.css --include=*.js --include=*.md .; then
+            echo "::error::Planning-only reference leaked into a shipped artifact"
+            exit 1
+          fi
+          echo "No process leak."
+
+      - name: Python demo script parses
+        run: |
+          set -euo pipefail
+          if [ -f demo/build_video.py ]; then
+            python3 -c "import ast,sys; ast.parse(open('demo/build_video.py').read()); print('demo/build_video.py parses OK')"
+          fi
