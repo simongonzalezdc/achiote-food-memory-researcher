@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Achiote — what the word means, and its names around the world</title>
+  <meta name="description" content="Achiote comes from Nahuatl āchiotl. The same red seed carries dozens of names across continents — and every name leads back to a kitchen." />
+  <link rel="canonical" href="https://achiote.kyanitelabs.tech/meaning" />
+  <meta property="og:title" content="Achiote — what the word means, and its names around the world" />
+  <meta property="og:description" content="The same red seed carries dozens of names across continents. Every name leads back to a kitchen." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://achiote.kyanitelabs.tech/meaning" />
+  <link rel="icon" href="proof/favicon.svg" />
+  <link rel="preload" href="proof/fonts/Fraunces-Variable.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="site.css" />
+  <style>
+    /* ---------- Meaning page ---------- */
+    .m-hero {
+      padding: clamp(48px, 7vw, 92px) 0 var(--s7);
+    }
+    .m-hero h1 {
+      font-size: clamp(2.8rem, 7vw, 5.2rem);
+      font-weight: 360;
+      line-height: 0.94;
+      letter-spacing: -0.02em;
+      margin: var(--s4) 0 0;
+      max-width: 16ch;
+    }
+    .m-hero h1 em {
+      font-style: italic;
+      font-weight: 380;
+      color: var(--oxblood);
+    }
+    .m-hero .lead {
+      max-width: 580px;
+      margin: var(--s6) 0 0;
+    }
+
+    /* Etymology flow */
+    .etym-flow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: var(--s3) var(--s5);
+      margin: var(--s6) 0 0;
+      font-family: "Fraunces", "Fraunces Fallback", Georgia, serif;
+      font-optical-sizing: auto;
+    }
+    .etym-step {
+      display: flex;
+      align-items: baseline;
+      gap: var(--s3);
+    }
+    .etym-step .word {
+      font-size: clamp(1.3rem, 2.4vw, 1.8rem);
+      font-weight: 420;
+      color: var(--ink);
+    }
+    .etym-step .word em {
+      font-style: italic;
+      color: var(--oxblood);
+    }
+    .etym-step .lang {
+      font-family: "Avenir Next", "Inter", system-ui, sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+    }
+    .etym-arrow {
+      color: var(--ochre);
+      font-size: 1.3rem;
+      font-weight: 300;
+      line-height: 1;
+    }
+
+    /* Fact grid */
+    .fact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--s4);
+      margin-top: var(--s7);
+    }
+    .fact-card {
+      padding: clamp(20px, 2.8vw, 30px);
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      background: var(--card);
+      box-shadow: 0 1px 0 rgba(255, 251, 243, 0.7) inset, 0 20px 50px rgba(96, 63, 34, 0.05);
+    }
+    .fact-card h3 {
+      margin: 0 0 var(--s2);
+      font-size: 1.05rem;
+      font-weight: 460;
+    }
+    .fact-card p {
+      margin: 0;
+      color: var(--ink-mute);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    .fact-card .fact-label {
+      display: inline-block;
+      margin: 0 0 var(--s2);
+      font-family: "Avenir Next", "Inter", system-ui, sans-serif;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ochre-text);
+    }
+
+    /* Names grid */
+    .names-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--s4);
+      margin-top: var(--s7);
+    }
+    .name-card {
+      position: relative;
+      padding: clamp(22px, 3vw, 32px);
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      background: var(--card);
+      box-shadow: 0 1px 0 rgba(255, 251, 243, 0.7) inset, 0 20px 50px rgba(96, 63, 34, 0.05);
+      transition: box-shadow var(--dur) var(--ease), transform var(--dur) var(--ease);
+    }
+    .name-card:hover {
+      box-shadow: 0 1px 0 rgba(255, 251, 243, 0.7) inset, 0 28px 60px rgba(96, 63, 34, 0.09);
+      transform: translateY(-2px);
+    }
+    .name-card .name-headword {
+      font-family: "Fraunces", "Fraunces Fallback", Georgia, serif;
+      font-optical-sizing: auto;
+      font-size: clamp(1.35rem, 2vw, 1.65rem);
+      font-weight: 420;
+      line-height: 1.1;
+      color: var(--ink);
+      margin: 0 0 var(--s2);
+    }
+    .name-card .name-region {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ochre-text);
+      margin: 0 0 var(--s2);
+    }
+    .name-card .name-note {
+      margin: 0;
+      color: var(--ink-mute);
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+    .name-card .name-origin {
+      margin: var(--s2) 0 0;
+      font-size: 0.82rem;
+      color: var(--ink-mute);
+      font-style: italic;
+    }
+
+    /* Closing CTA */
+    .closing {
+      text-align: center;
+    }
+    .closing h2 {
+      font-size: clamp(1.8rem, 3.6vw, 2.8rem);
+      font-weight: 380;
+      letter-spacing: -0.015em;
+      margin: 0 auto;
+      max-width: 16ch;
+      line-height: 1.05;
+    }
+    .closing .lead {
+      max-width: 560px;
+      margin: var(--s5) auto 0;
+    }
+    .closing .hero-cta {
+      display: flex;
+      gap: var(--s4);
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: var(--s7);
+    }
+
+    @media (max-width: 900px) {
+      .fact-grid { grid-template-columns: 1fr; }
+      .names-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 560px) {
+      .names-grid { grid-template-columns: 1fr; }
+      .etym-flow { flex-direction: column; align-items: flex-start; gap: var(--s3); }
+      .etym-arrow { transform: rotate(90deg); }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="/"><span class="dot" aria-hidden="true"></span>Achiote</a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="/">Home</a>
+        <a href="/#how">How it works</a>
+        <a href="week6.html">The proof</a>
+        <a href="meaning.html" aria-current="page">Meaning</a>
+        <a class="btn btn-primary" href="app.html">Try it free <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- HERO -->
+    <section class="m-hero">
+      <div class="container">
+        <p class="eyebrow">Etymology &amp; names</p>
+        <h1>One seed, <em>many names.</em></h1>
+        <p class="lead">When a family crosses a border, the language can slip — but the same red seed keeps cooking. Achiote finds the dish behind the name.</p>
+
+        <div class="etym-flow">
+          <div class="etym-step">
+            <span class="word"><em>āchiotl</em></span>
+            <span class="lang">Nahuatl</span>
+          </div>
+          <span class="etym-arrow" aria-hidden="true">→</span>
+          <div class="etym-step">
+            <span class="word">achiote</span>
+            <span class="lang">Spanish</span>
+          </div>
+          <span class="etym-arrow" aria-hidden="true">→</span>
+          <div class="etym-step">
+            <span class="word">annatto</span>
+            <span class="lang">English · global trade</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT IT MEANS -->
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <p class="kicker">What the word means</p>
+        <h2 class="section-title">The lipstick tree</h2>
+        <p class="section-copy">Achiote comes from the Nahuatl <em>āchiotl</em>, the word the Mexica used for the seeds of <em>Bixa orellana</em> — a shrub native to the tropical Americas. The plant bears prickly pods, and inside each pod, waxy seeds are wrapped in a bright red-orange paste. That paste — the aril — is the spice, the dye, and the colour. It has been painted on skin, woven into cloth, and stirred into cooking pots for thousands of years.</p>
+        <p class="section-copy">Because its pigment coats so vividly, the tree earned the nickname <strong>lipstick tree</strong>. Today the same compound — bixin, extracted from the aril — colours butter, cheese, and processed foods worldwide under the additive code <strong>E160b</strong>. The industrial name is <em>annatto</em>, drawn from the Carib and Galibi languages of the Caribbean. But in village markets from Oaxaca to Manila, the seed still goes by older names.</p>
+
+        <div class="fact-grid">
+          <div class="fact-card">
+            <p class="fact-label">Botanical</p>
+            <h3>Bixa orellana</h3>
+            <p>A shrub in the Bixaceae family, native to the Neotropics. Named for the Amazonian explorer Francisco de Orellana.</p>
+          </div>
+          <div class="fact-card">
+            <p class="fact-label">The spice</p>
+            <h3>The red aril</h3>
+            <p>The waxy coating around each seed — not the seed itself — carries the pigment. It stains everything it touches: fingers, cloth, oil, masa.</p>
+          </div>
+          <div class="fact-card">
+            <p class="fact-label">Global trade</p>
+            <h3>E160b (annatto)</h3>
+            <p>One of the oldest natural food colourants still in use. Found in cheddar, butter, margarine, and smoked fish across continents.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NAMES AROUND THE WORLD -->
+    <section class="section">
+      <div class="container">
+        <p class="kicker">Around the world</p>
+        <h2 class="section-title">The same seed, many tongues</h2>
+        <p class="section-copy">Every region that grows or trades the seed has given it a name. Often the name comes from the local Indigenous language — Nahuatl, Tupi, Taíno, Carib — and then passes into Spanish, Portuguese, English, or Tagalog. Below is a reference of the best-established names, each with its region and origin.</p>
+
+        <div class="names-grid">
+          <div class="name-card">
+            <p class="name-region">Mexico · Central America · Latin America</p>
+            <h3 class="name-headword">Achiote</h3>
+            <p class="name-note">The most widespread name in the Spanish-speaking Americas. The default term in Mexican, Guatemalan, and Central American cooking for both the seeds and the recado paste.</p>
+            <p class="name-origin">← Nahuatl <em>āchiotl</em></p>
+          </div>
+
+          <div class="name-card">
+            <p class="name-region">English · global food trade</p>
+            <h3 class="name-headword">Annatto</h3>
+            <p class="name-note">The international trade name. Used on ingredient labels, in food regulation (additive E160b), and in English-language culinary writing.</p>
+            <p class="name-origin">← Carib / Galibi</p>
+          </div>
+
+          <div class="name-card">
+            <p class="name-region">Brazil</p>
+            <h3 class="name-headword">Urucum</h3>
+            <p class="name-note">The common Portuguese name in Brazil. The colouring paste (colorau) is a staple in every Brazilian kitchen, tinting rice, stews, and farofa a deep gold.</p>
+            <p class="name-origin">← Tupi <em>uruku</em>, "red"</p>
+          </div>
+
+          <div class="name-card">
+            <p class="name-region">Cuba · Dominican Republic · Puerto Rico</p>
+            <h3 class="name-headword">Bija / Bijol</h3>
+            <p class="name-note">In the Spanish Caribbean, <em>bija</em> refers to the seeds; <em>bijol</em> is the commercial seasoning paste or powder. Essential to arroz con pollo and many stews.</p>
+            <p class="name-origin">← Taíno</p>
+          </div>
+
+          <div class="name-card">
+            <p class="name-region">Venezuela · Colombia</p>
+            <h3 class="name-headword">Onoto</h3>
+            <p class="name-note">The Andean and Caribbean coastal name. Used in Venezuelan hallacas, Colombian tamales, and any dish that wants a warm golden stain without heat.</p>
+          </div>
+
+          <div class="name-card">
+            <p class="name-region">French Caribbean · France</p>
+            <h3 class="name-headword">Roucou / Rocou</h3>
+            <p class="name-note">The French Caribbean name (roucou) and its metropolitan French form (rocou). Used in Martinique, Guadeloupe, and French Guiana for both the seeds and the traditional reddish paste.</p>
+          </div>
+
+          <div class="name-card">
+            <p class="name-region">Philippines</p>
+            <h3 class="name-headword">Atsuete / Achuete</h3>
+            <p class="name-note">Introduced via the Manila galleons from Mexico. The seeds are steeped in oil to colour and flavour Filipino stews, rice dishes like kare-kare, and pancit.</p>
+            <p class="name-origin">← Spanish <em>achiote</em></p>
+          </div>
+
+          <div class="name-card">
+            <p class="name-region">Nahuatl (original)</p>
+            <h3 class="name-headword">Āchiotl</h3>
+            <p class="name-note">The root of it all. The Mexica name for the seed, recorded in colonial codices, that became <em>achiote</em> in Spanish and then scattered across the world's kitchens.</p>
+          </div>
+
+          <div class="name-card" style="border-color: var(--line-strong); background: rgba(156, 42, 22, 0.03);">
+            <p class="name-region">Seed vs. condiment</p>
+            <h3 class="name-headword">A note on form</h3>
+            <p class="name-note"><strong>Annatto / achiote</strong> = the seeds themselves. <strong>Recado / achiote paste</strong> = the ground-seed paste mixed with garlic, spices, and bitter orange, used as a marinade in Yucatecan and Central American cooking.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLOSING CTA -->
+    <section class="section closing">
+      <div class="container">
+        <h2>The seed crossed borders before you did.</h2>
+        <p class="lead">Every name is a clue. Achiote traces them back to the kitchen your family remembers — or almost forgot.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="app.html">Bring a memory back <span class="arrow" aria-hidden="true">&rarr;</span></a>
+          <a class="btn btn-ghost" href="week6.html">See the proof</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span class="footer-brand">Achiote</span>
+      <p>Research-first food-memory reconstruction for families, immigrants, and diaspora communities. Built with interpretable context methodology.</p>
+    </div>
+  </footer>
+</body>
+</html>
