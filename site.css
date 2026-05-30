@@ -20,6 +20,17 @@
   font-style: italic;
   font-display: swap;
 }
+/* Metric-matched fallback (Georgia tuned to Fraunces' x-height + vertical metrics,
+   computed from the actual font: UPM 2000, xHeight 940, typoAsc 1956, typoDesc -510).
+   Headings render in this until Fraunces loads, with ZERO layout shift on swap. */
+@font-face {
+  font-family: "Fraunces Fallback";
+  src: local("Georgia"), local("Times New Roman");
+  size-adjust: 97.62%;
+  ascent-override: 100.18%;
+  descent-override: 26.12%;
+  line-gap-override: 0%;
+}
 
 /* ---------- Design tokens ---------- */
 :root {
@@ -34,7 +45,8 @@
   /* Accents */
   --oxblood: #9c2a16;
   --oxblood-deep: #7c1d0c;
-  --ochre: #b5832c;
+  --ochre: #b5832c;        /* decorative only — lines, borders, focus (2.8:1, not for text) */
+  --ochre-text: #7c5212;   /* AA-compliant ochre for label TEXT (≥4.85:1 on every paper) */
   --ochre-soft: #c9943f;
   --sage: #5b6a4d;
 
@@ -61,6 +73,14 @@
 
   --maxw: 1120px;
 
+  /* Fluid type scale (~Major Third) — every fluid size wraps a rem term so zoom works */
+  --step--1: clamp(0.78rem, 0.74rem + 0.18vw, 0.875rem);
+  --step-0:  clamp(1rem,    0.97rem + 0.16vw, 1.0625rem);  /* body */
+  --step-1:  clamp(1.15rem, 1.09rem + 0.30vw, 1.3rem);
+  --step-2:  clamp(1.4rem,  1.28rem + 0.60vw, 1.75rem);
+  --step-3:  clamp(1.7rem,  1.45rem + 1.20vw, 2.4rem);
+  --measure: 66ch;   /* readable line length: ~45–75 characters */
+
   color-scheme: light;
   font-family: "Avenir Next", "Inter", "SF Pro Text", system-ui, sans-serif;
 }
@@ -82,10 +102,14 @@ body {
     radial-gradient(120% 78% at 82% -8%, rgba(181, 131, 44, 0.10), transparent 58%),
     linear-gradient(162deg, var(--paper-0) 0%, var(--paper-1) 56%, var(--paper-2) 100%);
   background-attachment: fixed;
+  font-size: var(--step-0);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
+
+/* Avoid orphans / ragged last lines in running copy (progressive enhancement) */
+p { text-wrap: pretty; }
 
 /* Single quiet paper grain */
 body::before {
@@ -140,9 +164,10 @@ a:focus-visible, button:focus-visible {
 
 /* ---------- Display type ---------- */
 h1, h2, h3, h4 {
-  font-family: "Fraunces", Georgia, "Times New Roman", serif;
+  font-family: "Fraunces", "Fraunces Fallback", Georgia, "Times New Roman", serif;
   font-optical-sizing: auto;
   font-style: normal;
+  line-height: 1.1;          /* tight display rhythm — large display sizes set their own below */
   text-wrap: balance;
   color: var(--ink);
 }
@@ -152,7 +177,7 @@ h1, h2, h3, h4 {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  color: var(--ochre);
+  color: var(--ochre-text);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.18em;
@@ -202,7 +227,7 @@ h1, h2, h3, h4 {
   display: inline-flex;
   align-items: baseline;
   gap: 10px;
-  font-family: "Fraunces", Georgia, serif;
+  font-family: "Fraunces", "Fraunces Fallback", Georgia, serif;
   font-optical-sizing: auto;
   font-weight: 500;
   font-size: 1.5rem;
@@ -325,7 +350,7 @@ h1, h2, h3, h4 {
   flex-wrap: wrap;
 }
 .footer-brand {
-  font-family: "Fraunces", Georgia, serif;
+  font-family: "Fraunces", "Fraunces Fallback", Georgia, serif;
   font-optical-sizing: auto;
   font-weight: 500;
   font-size: 1.15rem;

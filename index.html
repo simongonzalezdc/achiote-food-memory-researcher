@@ -12,6 +12,7 @@
   <meta property="og:url" content="https://achiote.kyanitelabs.tech/" />
   <meta property="og:image" content="https://achiote.kyanitelabs.tech/og-image.jpg" />
   <link rel="icon" href="proof/favicon.svg" />
+  <link rel="preload" href="proof/fonts/Fraunces-Variable.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="site.css" />
   <style>
     /* ---------- Landing-specific ---------- */
@@ -69,7 +70,7 @@
     .mission { text-align: center; }
     .mission p {
       max-width: 760px; margin: 0 auto;
-      font-family: "Fraunces", Georgia, serif;
+      font-family: "Fraunces", "Fraunces Fallback", Georgia, serif;
       font-optical-sizing: auto;
       font-size: clamp(1.35rem, 2.7vw, 1.95rem);
       font-style: italic;
@@ -78,7 +79,7 @@
       color: var(--ink);
       text-wrap: balance;
     }
-    .mission .signoff { margin-top: var(--s5); font-family: "Avenir Next", "Inter", system-ui, sans-serif; font-style: normal; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ochre); }
+    .mission .signoff { margin-top: var(--s5); font-family: "Avenir Next", "Inter", system-ui, sans-serif; font-style: normal; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ochre-text); }
 
     /* Contrast: summarizer vs researcher */
     .contrast { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s4); margin-top: var(--s7); }
@@ -112,14 +113,14 @@
     .receipt-row .v { color: var(--ink-soft); }
     .script { font-family: "Fraunces", Georgia, serif; font-optical-sizing: auto; font-style: italic; color: #5a3f2d; }
     .tag-pill { display:inline-block; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; }
-    .t-said { background: rgba(91,106,77,0.16); color: var(--sage); }
-    .t-inf { background: rgba(181,131,44,0.16); color: var(--ochre); }
+    .t-said { background: rgba(91,106,77,0.16); color: #505d45; }
+    .t-inf { background: rgba(181,131,44,0.16); color: var(--ochre-text); }
     .t-unk { background: rgba(124,29,12,0.10); color: var(--oxblood); }
 
     /* Workflow movements */
     .movements { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--s4); margin-top: var(--s7); counter-reset: mv; }
     .movement { position: relative; padding-top: var(--s5); border-top: 2px solid var(--line-strong); }
-    .movement::before { counter-increment: mv; content: counter(mv, decimal-leading-zero); font-family: "Fraunces", serif; font-size: 0.8rem; font-weight: 600; color: var(--ochre); letter-spacing: 0.1em; }
+    .movement::before { counter-increment: mv; content: counter(mv, decimal-leading-zero); font-family: "Fraunces", "Fraunces Fallback", serif; font-size: 0.8rem; font-weight: 600; color: var(--ochre-text); letter-spacing: 0.1em; }
     .movement h4 { margin: var(--s2) 0 6px; font-size: 1.05rem; font-weight: 500; }
     .movement p { margin: 0; color: var(--ink-mute); font-size: 0.85rem; line-height: 1.4; }
 
