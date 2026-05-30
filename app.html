@@ -4,73 +4,140 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Achiote — Reconstruct a food memory</title>
-  <meta name="description" content="Describe a half-remembered dish and Achiote will investigate it — weighing sources, separating evidence from inference, and giving you one small taste to test the memory." />
+  <meta name="description" content="Describe a half-remembered dish and Achiote investigates it with you — asking what it needs, weighing sources, and giving you one small taste to test the memory." />
   <link rel="canonical" href="https://achiote.kyanitelabs.tech/app" />
   <meta property="og:title" content="Achiote — Reconstruct a food memory" />
-  <meta property="og:description" content="A food-memory researcher that investigates instead of guessing." />
+  <meta property="og:description" content="A food-memory researcher that investigates, in conversation, instead of guessing." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://achiote.kyanitelabs.tech/app" />
   <link rel="icon" href="proof/favicon.svg" />
   <link rel="preload" href="proof/fonts/Fraunces-Variable.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="site.css" />
   <style>
-    .app-hero { padding: clamp(40px, 6vw, 72px) 0 var(--s6); }
-    .app-hero h1 { font-size: clamp(2.6rem, 6vw, 4.4rem); font-weight: 360; line-height: 0.96; letter-spacing: -0.02em; margin: var(--s3) 0 0; }
-    .app-hero h1 em { font-style: italic; color: var(--oxblood); font-weight: 380; }
-    .app-hero .lead { max-width: 580px; margin: var(--s5) 0 0; }
+    .app-main { min-height: calc(100vh - 72px); display: flex; flex-direction: column; }
+    .app-shell { width: min(820px, calc(100% - 40px)); margin: 0 auto; flex: 1; display: flex; flex-direction: column; }
 
-    .console { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 0.86fr); gap: clamp(24px, 4vw, 48px); align-items: start; padding-bottom: var(--s9); }
-    @media (max-width: 900px) { .console { grid-template-columns: 1fr; } }
+    .app-hero { padding: clamp(28px, 5vw, 52px) 0 var(--s5); }
+    .app-hero h1 { font-size: clamp(2.1rem, 4.6vw, 3.1rem); font-weight: 380; line-height: 1.04; letter-spacing: -0.015em; margin: var(--s3) 0 0; }
+    .app-hero h1 em { font-style: italic; color: var(--oxblood); font-weight: 400; }
+    .app-hero .lead { max-width: 60ch; margin: var(--s4) 0 0; }
 
-    .field-label { font-size: 0.74rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-mute); }
-    .app-input {
-      width: 100%; margin-top: var(--s3); padding: var(--s5); min-height: 168px; resize: vertical;
-      border: 1px solid var(--line-strong); border-radius: var(--r-md); background: #fffdf8; color: var(--ink);
-      font: inherit; font-size: 1.05rem; line-height: 1.5;
+    /* Conversation thread */
+    #thread { display: flex; flex-direction: column; gap: var(--s5); padding-bottom: var(--s6); }
+    .msg { max-width: 100%; }
+    .msg.user {
+      align-self: flex-end; max-width: 86%;
+      background: var(--oxblood); color: #fdf3e2;
+      padding: 11px 16px; border-radius: 16px 16px 4px 16px;
+      font-size: 1rem; line-height: 1.5; white-space: pre-wrap; word-break: break-word;
+      box-shadow: 0 8px 22px rgba(124,29,12,0.16);
+    }
+    .msg.ai { align-self: flex-start; width: 100%; }
+
+    .ai-text { max-width: 66ch; color: var(--ink-soft); font-size: var(--step-0, 1.0625rem); line-height: 1.6; text-wrap: pretty; }
+    .ai-text strong { color: var(--ink); }
+    .ai-text h4 { font-size: 1.1rem; line-height: 1.2; margin: var(--s4) 0 var(--s2); }
+    .ai-text.err { color: var(--oxblood-deep); }
+
+    /* Typing indicator */
+    .typing { display: inline-flex; gap: 5px; padding: 6px 2px; }
+    .typing span { width: 7px; height: 7px; border-radius: 999px; background: var(--ochre); opacity: 0.5; animation: blink 1.2s infinite ease-in-out; }
+    .typing span:nth-child(2) { animation-delay: 0.2s; }
+    .typing span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes blink { 0%, 80%, 100% { opacity: 0.25; transform: translateY(0); } 40% { opacity: 0.9; transform: translateY(-3px); } }
+    @media (prefers-reduced-motion: reduce) { .typing span { animation: none; } }
+
+    /* Live progress trace */
+    .trace { margin-top: var(--s4); border-left: 2px solid var(--line-strong); padding: var(--s3) var(--s4); background: rgba(255,251,243,0.55); border-radius: 0 var(--r-sm) var(--r-sm) 0; }
+    .trace-head { font-size: 0.64rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ochre-text); margin-bottom: 6px; }
+    .trace-list { display: flex; flex-direction: column; gap: 2px; max-height: 168px; overflow: auto; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.78rem; line-height: 1.5; }
+    .trace-item { color: var(--ink-mute); }
+    .trace-item.tool_call, .trace-item.tool_result { color: var(--ink-soft); }
+    .trace-item.error { color: var(--oxblood); }
+
+    /* Memory Receipt (the signature output) */
+    .receipt-paper {
+      margin-top: var(--s5); position: relative; padding: var(--s6) 30px;
+      background:
+        linear-gradient(90deg, transparent 0 116px, rgba(156,42,22,0.10) 116px 118px, transparent 118px),
+        repeating-linear-gradient(0deg, transparent 0 31px, rgba(27,19,11,0.10) 31px 32px), #fff8ea;
+      border: 1px solid var(--line-strong); border-radius: 3px; box-shadow: 0 24px 56px rgba(96,63,34,0.14);
+    }
+    .receipt-paper h3 { margin: 0 0 var(--s2); font-size: 1.4rem; font-weight: 460; }
+    .r-meta { margin: 0 0 var(--s5); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-mute); }
+    .r-group { margin: var(--s4) 0 0; }
+    .r-label { display: block; color: var(--ink-mute); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 5px; }
+    .r-group ul, .r-questions ol { margin: 0; padding-left: 1.15em; color: var(--ink-soft); font-size: 0.95rem; line-height: 1.55; }
+    .r-group li, .r-questions li { margin: 3px 0; }
+    .r-questions { margin-top: var(--s5); padding: var(--s4) var(--s5); border: 1px solid rgba(156,42,22,0.28); border-radius: var(--r-sm); background: rgba(156,42,22,0.05); }
+    .r-questions .r-label { color: var(--oxblood); }
+    .r-hint { margin: var(--s3) 0 0; font-size: 0.86rem; font-style: italic; color: var(--ink-mute); }
+    .r-taste { margin-top: var(--s5); padding-top: var(--s4); border-top: 1px solid var(--line); }
+    .r-taste .r-label { color: var(--oxblood); }
+    .r-taste .cue { margin: 5px 0 0; font-family: "Fraunces", "Fraunces Fallback", Georgia, serif; font-optical-sizing: auto; font-style: italic; color: #5a3f2d; font-size: 1.04rem; line-height: 1.5; }
+
+    /* Welcome + suggestions */
+    .welcome { padding: var(--s4) 0 var(--s6); }
+    .welcome.hide { display: none; }
+    .welcome p { color: var(--ink-mute); font-size: 0.95rem; margin: 0 0 var(--s4); }
+    .suggestions { display: flex; flex-wrap: wrap; gap: var(--s2); }
+    .suggestion {
+      font: inherit; font-size: 0.9rem; cursor: pointer; text-align: left;
+      padding: 9px 15px; border-radius: var(--r-full);
+      border: 1px solid var(--line-strong); background: rgba(255,251,243,0.6); color: var(--ink-soft);
+      transition: background var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease), transform var(--dur) var(--ease);
+    }
+    .suggestion:hover { background: var(--ink); color: var(--paper-0); border-color: var(--ink); transform: translateY(-1px); }
+    .sug-tag { display: inline-block; margin-left: 8px; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ochre-text); border: 1px solid rgba(124,82,18,0.32); border-radius: 999px; padding: 1px 7px; vertical-align: middle; }
+    .suggestion:hover .sug-tag { color: var(--paper-0); border-color: rgba(255,255,255,0.4); }
+
+    /* Persistent composer */
+    .composer { position: sticky; bottom: 0; z-index: 5; padding: var(--s3) 0 var(--s5);
+      background: linear-gradient(to top, var(--paper-1) 64%, rgba(245,233,211,0)); }
+    .composer-bar {
+      display: flex; align-items: flex-end; gap: var(--s2);
+      background: #fffdf8; border: 1px solid var(--line-strong); border-radius: var(--r-lg);
+      padding: 8px 8px 8px 16px; box-shadow: 0 12px 34px rgba(96,63,34,0.10);
       transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
     }
-    .app-input::placeholder { color: #a8967f; }
-    .app-input:focus-visible { outline: none; border-color: var(--ochre); box-shadow: 0 0 0 4px rgba(181,131,44,0.16); }
-
-    .chips { display: flex; flex-wrap: wrap; gap: var(--s2); margin-top: var(--s4); }
-    .chip {
-      font: inherit; font-size: 0.82rem; cursor: pointer; padding: 7px 14px; border-radius: var(--r-full);
-      border: 1px solid var(--line-strong); background: transparent; color: var(--ink-soft);
-      transition: background var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+    .composer-bar:focus-within { border-color: var(--ochre); box-shadow: 0 0 0 4px rgba(181,131,44,0.16), 0 12px 34px rgba(96,63,34,0.10); }
+    #composer-input {
+      flex: 1; border: 0; outline: none; background: transparent; resize: none;
+      font: inherit; font-size: 1.04rem; line-height: 1.5; color: var(--ink);
+      min-height: 30px; max-height: 168px; padding: 9px 0;
     }
-    .chip:hover { background: var(--ink); color: var(--paper-0); border-color: var(--ink); }
+    #composer-input::placeholder { color: #a8967f; }
+    .icon-btn {
+      flex: 0 0 auto; width: 44px; height: 44px; display: inline-grid; place-items: center;
+      border-radius: var(--r-full); cursor: pointer; border: 1px solid var(--line-strong);
+      background: transparent; color: var(--ink-mute); transition: all var(--dur) var(--ease);
+    }
+    .icon-btn:hover { color: var(--ink); border-color: var(--ink); }
+    .icon-btn svg { width: 20px; height: 20px; }
+    #mic-btn.recording { background: var(--oxblood); color: #fdf3e2; border-color: var(--oxblood); animation: pulse 1.3s infinite; }
+    @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(156,42,22,0.4); } 50% { box-shadow: 0 0 0 7px rgba(156,42,22,0); } }
+    @media (prefers-reduced-motion: reduce) { #mic-btn.recording { animation: none; } }
+    #send-btn {
+      flex: 0 0 auto; width: 46px; height: 46px; display: inline-grid; place-items: center;
+      border: 0; border-radius: var(--r-full); cursor: pointer; color: #fdf3e2; background: var(--oxblood);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.14); transition: background var(--dur) var(--ease), transform var(--dur) var(--ease);
+    }
+    #send-btn:hover { background: var(--oxblood-deep); transform: translateY(-1px); }
+    #send-btn:disabled { opacity: 0.55; cursor: default; transform: none; }
+    #send-btn svg { width: 20px; height: 20px; }
 
-    .app-actions { display: flex; align-items: center; gap: var(--s4); margin-top: var(--s5); flex-wrap: wrap; }
-    .app-note { font-size: 0.8rem; color: var(--ink-mute); }
+    .voice-status { min-height: 1.1em; margin: 0 0 6px; font-size: 0.78rem; color: var(--ink-mute); text-align: center; }
+    .app-note { margin: var(--s2) 0 0; font-size: 0.78rem; color: var(--ink-mute); text-align: center; }
 
-    .auth-row { margin-top: var(--s4); display: none; gap: var(--s3); align-items: center; flex-wrap: wrap; }
+    .auth-row { display: none; margin: var(--s3) auto 0; max-width: 460px; gap: var(--s2); align-items: center; flex-wrap: wrap; justify-content: center; }
     .auth-row.show { display: flex; }
-    .auth-row input { padding: 10px 14px; border: 1px solid var(--line-strong); border-radius: var(--r-full); font: inherit; background: #fffdf8; min-width: 220px; }
-    .auth-row .hint { font-size: 0.8rem; color: var(--oxblood); }
+    .auth-row .hint { flex: 1 1 100%; text-align: center; font-size: 0.82rem; color: var(--oxblood); }
+    .auth-row input { padding: 10px 14px; border: 1px solid var(--line-strong); border-radius: var(--r-full); font: inherit; background: #fffdf8; min-width: 200px; }
 
-    .app-output { position: sticky; top: 92px; }
-    .receipt-paper {
-      position: relative; padding: var(--s6) 30px;
-      background: linear-gradient(90deg, transparent 0 116px, rgba(156,42,22,0.10) 116px 118px, transparent 118px),
-        repeating-linear-gradient(0deg, transparent 0 31px, rgba(27,19,11,0.10) 31px 32px), #fff8ea;
-      border: 1px solid var(--line-strong); border-radius: 3px; box-shadow: 0 28px 56px rgba(96,63,34,0.16);
+    @media (max-width: 560px) {
+      .msg.user { max-width: 92%; }
+      .receipt-paper { padding: var(--s5) 18px; }
     }
-    .receipt-paper h3 { margin: 0 0 var(--s2); font-size: 1.3rem; font-weight: 460; }
-    .receipt-meta { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-mute); margin: 0 0 var(--s5); }
-    .receipt-group { margin: var(--s4) 0 0; }
-    .receipt-group .label { display:block; color: var(--ink-mute); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
-    .receipt-group ul { margin: 0; padding-left: 1.05em; font-size: 0.92rem; color: var(--ink-soft); }
-    .receipt-group li { margin: 3px 0; }
-    .first-taste { margin-top: var(--s5); padding-top: var(--s4); border-top: 1px solid var(--line); }
-    .first-taste .label { color: var(--oxblood); }
-    .first-taste .cue { font-family: "Fraunces", Georgia, serif; font-optical-sizing: auto; font-style: italic; color: #5a3f2d; font-size: 1.02rem; line-height: 1.45; }
-    .app-answer { margin-top: var(--s5); padding: var(--s5); border: 1px solid var(--line); border-radius: var(--r-md); background: var(--card); line-height: 1.62; font-size: 0.96rem; color: var(--ink-soft); }
-    .app-answer strong { color: var(--ink); }
-
-    .placeholder-receipt { border: 1px dashed var(--line-strong); border-radius: var(--r-md); padding: var(--s7) var(--s6); text-align: center; color: var(--ink-mute); background: rgba(255,251,243,0.4); }
-    .placeholder-receipt .mark { font-family: "Fraunces", "Fraunces Fallback", serif; font-style: italic; font-size: 1.2rem; color: var(--ochre-text); }
-    .is-loading .app-send { opacity: 0.7; pointer-events: none; }
-    .demo-flag { display:inline-block; margin-top: var(--s4); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ochre-text); font-weight: 700; }
   </style>
 </head>
 <body>
@@ -87,48 +154,53 @@
     </div>
   </header>
 
-  <main id="main">
-    <section class="app-hero">
-      <div class="container">
+  <main id="main" class="app-main">
+    <div class="app-shell">
+      <section class="app-hero" id="start">
         <p class="eyebrow">The researcher, working</p>
-        <h1>Describe what you<br />remember. We'll <em>investigate.</em></h1>
-        <p class="lead">No name, no recipe, no shared language required. Give Achiote a fragment — a sound, a smell, a color — and it returns a Memory Receipt with one small taste to try first.</p>
-      </div>
-    </section>
+        <h1>Describe what you remember. We'll <em>investigate.</em></h1>
+        <p class="lead">No name, no recipe, no shared language required. Tell Achiote a fragment — a sound, a smell, a color — and it asks what it needs, then builds a Memory Receipt with one small taste to try first.</p>
+      </section>
 
-    <section class="container console" id="start">
-      <div>
-        <label class="field-label" for="memory">Your memory</label>
-        <textarea id="memory" class="app-input" rows="6" placeholder="My grandma made something that sounded like 'pass-teh-lay.' Savory, wrapped in a leaf. I don't speak Spanish. I live near Orlando."></textarea>
-        <div class="chips" aria-label="Try an example">
-          <button class="chip" type="button">A leaf-wrapped savory bite I can't name</button>
-          <button class="chip" type="button">A cold, cinnamon rice drink over ice</button>
-          <button class="chip" type="button">A sweet white thing my aunt made</button>
+      <section class="chat" aria-live="polite">
+        <div id="thread"></div>
+        <div class="welcome" id="welcome">
+          <p>Not sure where to start? Try one of these:</p>
+          <div class="suggestions">
+            <button class="suggestion" type="button" data-fill="A soup my grandmother used to make.">A soup my grandmother made <span class="sug-tag">it'll ask</span></button>
+            <button class="suggestion" type="button" data-fill="A cold rice drink from childhood. Cinnamon smell, thin but a little starchy, served over ice. My family is from Mexico but I don't know the name.">A cold, cinnamon rice drink over ice</button>
+            <button class="suggestion" type="button" data-fill="My Puerto Rican grandma made something that sounded like 'pass-teh-lay.' Savory, pork maybe, wrapped in a leaf. I don't speak Spanish. I live near Orlando.">A leaf-wrapped savory bite I can't name</button>
+          </div>
         </div>
-        <div class="app-actions">
-          <button id="send" class="btn btn-primary app-send" type="button">Reconstruct the memory <span class="arrow" aria-hidden="true">&rarr;</span></button>
-          <span class="app-note">Free · no signup · your words stay your words</span>
-        </div>
-        <div class="auth-row" id="authRow">
-          <span class="hint">This server is gated. Enter the demo password to continue:</span>
-          <input id="demoPw" type="password" placeholder="Demo password" autocomplete="off" />
-          <button class="btn btn-ghost" id="retry" type="button">Continue</button>
-        </div>
-      </div>
+      </section>
+    </div>
 
-      <div class="app-output" id="output" aria-live="polite">
-        <div class="placeholder-receipt">
-          <p class="mark">Your Memory Receipt appears here.</p>
-          <p>What you said · what was researched · what's inferred · what's unknown · and the first taste to try.</p>
+    <div class="composer">
+      <div class="app-shell">
+        <p class="voice-status" id="voice-status" aria-live="polite"></p>
+        <div class="composer-bar">
+          <button class="icon-btn" id="mic-btn" type="button" hidden aria-label="Speak your memory (transcribes to text)" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"></rect><path d="M5 11a7 7 0 0 0 14 0"></path><line x1="12" y1="18" x2="12" y2="22"></line></svg>
+          </button>
+          <textarea id="composer-input" rows="1" placeholder="Describe the dish you remember… a sound, a smell, a place, a person."></textarea>
+          <button id="send-btn" type="button" aria-label="Send">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </button>
         </div>
+        <div class="auth-row" id="auth-row">
+          <span class="hint">This demo is gated. Enter the demo password to continue:</span>
+          <input id="demo-password" type="password" placeholder="Demo password" autocomplete="off" />
+          <button class="btn btn-ghost" id="auth-continue" type="button">Continue</button>
+        </div>
+        <p class="app-note">Free · no signup · your words stay your words</p>
       </div>
-    </section>
+    </div>
   </main>
 
   <footer class="site-footer">
     <div class="container">
       <span class="footer-brand">Achiote</span>
-      <p>Research-first food-memory reconstruction. Powered by an evidence-bounded research workflow — it weighs sources, marks the unknowns, and never invents your family's recipe.</p>
+      <p>Research-first food-memory reconstruction. It investigates in conversation — weighing sources, marking the unknowns, and never inventing your family's recipe.</p>
     </div>
   </footer>
 
