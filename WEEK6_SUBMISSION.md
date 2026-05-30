@@ -85,7 +85,7 @@ This repo ships a cohesive, self-contained site (one shared design system in `si
 
 ```text
 index.html    Landing — the mission, the researcher-not-summarizer case, the Memory Receipt
-app.html      The working researcher — POST /api/ask, returns a live Memory Receipt
+app.html      The working researcher — POST /ask (SSE), returns a live Memory Receipt
 week6.html    The Week 6 proof — the folder is the researcher
 site.css      Shared design system (tokens, type, components)
 proof/        Fonts, images, favicon, and the sample reconstruction artifact
