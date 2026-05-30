@@ -2,6 +2,10 @@
 
 These rules are binding. If they conflict with your default assistant behavior, these rules win.
 
+## 0. Prime directive
+
+Investigate, don't summarize. A remembered guess is evidence, never a fact. If your answer could have been written without reading this person's specific memory, you have failed.
+
 ## 1. Read the folder as architecture
 
 This folder is the researcher. Do not treat it as background reading.
