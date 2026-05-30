@@ -13,6 +13,7 @@
   <link rel="icon" href="proof/favicon.svg" />
   <link rel="preload" href="proof/fonts/Fraunces-Variable.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="site.css" />
+  <link rel="stylesheet" href="type-scripts.css" />
   <style>
     .app-main { min-height: calc(100vh - 72px); display: flex; flex-direction: column; }
     .app-shell { width: min(820px, calc(100% - 40px)); margin: 0 auto; flex: 1; display: flex; flex-direction: column; }
@@ -35,8 +36,16 @@
     .msg.ai { align-self: flex-start; width: 100%; }
 
     .ai-text { max-width: 66ch; color: var(--ink-soft); font-size: var(--step-0, 1.0625rem); line-height: 1.6; text-wrap: pretty; }
+    .ai-text > :first-child { margin-top: 0; }
+    .ai-text > :last-child { margin-bottom: 0; }
+    .ai-text p { margin: 0 0 0.8em; }
+    .ai-text ul, .ai-text ol { margin: 0.4em 0 0.85em; padding-inline-start: 1.4em; }
+    .ai-text li { margin: 0.25em 0; line-height: 1.55; }
+    .ai-text li::marker { color: var(--ochre-text); }
     .ai-text strong { color: var(--ink); }
-    .ai-text h4 { font-size: 1.1rem; line-height: 1.2; margin: var(--s4) 0 var(--s2); }
+    .ai-text em { font-style: italic; }
+    .ai-text h3 { font-family: "Fraunces","Fraunces Fallback",Georgia,serif; font-optical-sizing: auto; font-size: 1.24rem; font-weight: 460; line-height: 1.2; margin: 0.7em 0 0.3em; color: var(--ink); }
+    .ai-text h4 { font-family: "Fraunces","Fraunces Fallback",Georgia,serif; font-optical-sizing: auto; font-size: 1.06rem; font-weight: 500; line-height: 1.25; margin: 0.6em 0 0.25em; color: var(--ink); }
     .ai-text.err { color: var(--oxblood-deep); }
 
     /* Typing indicator */
@@ -168,9 +177,9 @@
         <div class="welcome" id="welcome">
           <p>Not sure where to start? Try one of these:</p>
           <div class="suggestions">
-            <button class="suggestion" type="button" data-fill="A soup my grandmother used to make.">A soup my grandmother made <span class="sug-tag">it'll ask</span></button>
-            <button class="suggestion" type="button" data-fill="A cold rice drink from childhood. Cinnamon smell, thin but a little starchy, served over ice. My family is from Mexico but I don't know the name.">A cold, cinnamon rice drink over ice</button>
-            <button class="suggestion" type="button" data-fill="My Puerto Rican grandma made something that sounded like 'pass-teh-lay.' Savory, pork maybe, wrapped in a leaf. I don't speak Spanish. I live near Orlando.">A leaf-wrapped savory bite I can't name</button>
+            <button class="suggestion" type="button" data-fill="There's a soup my grandmother used to make — I never learned the name. I just remember it being deep orange and a little oily, and only when the whole family came together. My dad's side came from somewhere in West Africa.">A soup my grandmother made</button>
+            <button class="suggestion" type="button" data-fill="A cold, sweet drink from when I was little. My family stopped making it. Cinnamon, maybe, kind of milky? My mom's family is from somewhere in Latin America but nobody really remembers.">A cold drink from childhood</button>
+            <button class="suggestion" type="button" data-fill="Some savory thing wrapped in a banana leaf that my great-grandmother used to steam. Nobody left in the family remembers what it was called — only that we came from somewhere in Southeast Asia.">A leaf-wrapped thing we lost</button>
           </div>
         </div>
       </section>

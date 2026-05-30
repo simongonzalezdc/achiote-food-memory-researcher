@@ -29,14 +29,50 @@
     return String(s == null ? '' : s)
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
-  // Minimal, safe markdown for streamed prose.
-  function md(s) {
-    return esc(s)
+  // Inline markdown (escape first, then format) — XSS-safe.
+  function inlineMd(t) {
+    return esc(t)
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/(^|[^\*])\*([^\*\n]+)\*/g, '$1<em>$2</em>')
-      .replace(/^\s*###\s+(.+)$/gm, '<h4>$1</h4>')
-      .replace(/\n\s*[-•]\s+/g, '<br>• ')
-      .replace(/\n/g, '<br>');
+      .replace(/(^|[^\*])\*([^\*\n]+)\*/g, '$1<em>$2</em>');
+  }
+  // Block-level markdown -> proper <p>/<ul>/<ol>/<h3>/<h4> so prose reads as typographic blocks.
+  function md(s) {
+    var blocks = String(s == null ? '' : s).replace(/\r\n/g, '\n').split(/\n{2,}/);
+    var out = '';
+    blocks.forEach(function (b) {
+      var t = b.trim();
+      if (!t) return;
+      var lines = b.split('\n');
+      if (/^###\s+/.test(t)) { out += '<h4>' + inlineMd(t.replace(/^###\s+/, '')) + '</h4>'; return; }
+      if (/^##\s+/.test(t))  { out += '<h3>' + inlineMd(t.replace(/^##\s+/, '')) + '</h3>'; return; }
+      if (lines.every(function (l) { return !l.trim() || /^\s*[-•*]\s+/.test(l); })) {
+        out += '<ul>' + lines.filter(function (l) { return l.trim(); })
+          .map(function (l) { return '<li>' + inlineMd(l.replace(/^\s*[-•*]\s+/, '')) + '</li>'; }).join('') + '</ul>';
+        return;
+      }
+      if (lines.every(function (l) { return !l.trim() || /^\s*\d+[.)]\s+/.test(l); })) {
+        out += '<ol>' + lines.filter(function (l) { return l.trim(); })
+          .map(function (l) { return '<li>' + inlineMd(l.replace(/^\s*\d+[.)]\s+/, '')) + '</li>'; }).join('') + '</ol>';
+        return;
+      }
+      out += '<p>' + inlineMd(t).replace(/\n/g, '<br>') + '</p>';
+    });
+    return out;
+  }
+  // Detect the dominant non-Latin script so the chat can render the assistant's reply
+  // in the right font (and RTL) when it answers in the user's language.
+  function detectLang(s) {
+    if (/[一-鿿]/.test(s)) return 'zh';
+    if (/[぀-ヿ]/.test(s)) return 'ja';
+    if (/[가-힯]/.test(s)) return 'ko';
+    if (/[؀-ۿ]/.test(s)) return 'ar';
+    if (/[֐-׿]/.test(s)) return 'he';
+    if (/[ऀ-ॿ]/.test(s)) return 'hi';
+    if (/[ঀ-৿]/.test(s)) return 'bn';
+    if (/[฀-๿]/.test(s)) return 'th';
+    if (/[஀-௿]/.test(s)) return 'ta';
+    if (/[Ѐ-ӿ]/.test(s)) return 'ru';
+    return null;
   }
   function scrollDown() {
     if (thread) thread.scrollTop = thread.scrollHeight;
@@ -178,8 +214,7 @@
         clearTyping(aiEl);
         contentEl = document.createElement('div');
         contentEl.className = 'ai-text';
-        var tr = aiEl.querySelector('.trace');     // keep prose above the trace
-        if (tr) aiEl.insertBefore(contentEl, tr); else aiEl.appendChild(contentEl);
+        aiEl.appendChild(contentEl);   // prose sits after the live trace (trace -> text -> receipt)
       }
       return contentEl;
     }
@@ -206,6 +241,9 @@
         if (r.done) {
           if (buf.trim()) handle(buf);
           clearTyping(aiEl);
+          // App meets you in your language: tag the reply's script so it gets the right font + RTL.
+          var lg = detectLang(text);
+          if (lg) { aiEl.setAttribute('lang', lg); if (lg === 'ar' || lg === 'he') aiEl.setAttribute('dir', 'rtl'); }
           if (receipt) renderReceipt(aiEl, receipt, !!text);
           if (!text && !receipt) {
             content().textContent = 'No response came back. Try rephrasing the memory.';
