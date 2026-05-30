@@ -160,7 +160,7 @@
       // falls between the `event:` and `data:` lines.
       function parseBlock(block) {
         var type = 'message', dataLines = [];
-        var lines = block.split('\n');
+        var lines = block.split(/\r?\n/);
         for (var i = 0; i < lines.length; i++) {
           var line = lines[i];
           if (line.indexOf(':') === 0) continue;            // SSE comment line
@@ -266,13 +266,13 @@
           while (true) {
             var r = await reader.read();
             if (r.done) break;
-            buf += dec.decode(r.value, { stream: true }).replace(/\r\n/g, '\n');
-            var idx;
-            while ((idx = buf.indexOf('\n\n')) !== -1) {     // process each complete event
-              var block = buf.slice(0, idx);
-              buf = buf.slice(idx + 2);
-              dispatch(block);
-            }
+            buf += dec.decode(r.value, { stream: true });
+            // Split on the blank-line delimiter, tolerant of LF or CRLF even when a
+            // chunk boundary lands inside the delimiter. The trailing element is the
+            // (possibly incomplete) next event and stays buffered.
+            var parts = buf.split(/\r?\n\r?\n/);
+            buf = parts.pop();
+            for (var i = 0; i < parts.length; i++) dispatch(parts[i]);
           }
           if (buf.trim()) dispatch(buf);                      // flush a trailing event with no blank line
           history = (history || []).concat([{ role: 'user', content: message }, { role: 'assistant', content: text }]).slice(-20);
