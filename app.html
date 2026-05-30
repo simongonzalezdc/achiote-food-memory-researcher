@@ -155,18 +155,19 @@
       function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
       function md(s){ return esc(s).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>'); }
 
-      // SSE chunk parser (mirrors the production helper)
-      function parseSse(buffer, chunk) {
-        var combined = (buffer || '') + (chunk || '');
-        var lines = combined.split('\n');
-        var pending = lines.pop() || '';
-        var events = [], type = '';
+      // Parse one COMPLETE SSE event block (delimited by a blank line) into {type, data}.
+      // Buffering whole blocks avoids losing the event type when a chunk boundary
+      // falls between the `event:` and `data:` lines.
+      function parseBlock(block) {
+        var type = 'message', dataLines = [];
+        var lines = block.split('\n');
         for (var i = 0; i < lines.length; i++) {
           var line = lines[i];
-          if (line.indexOf('event: ') === 0) type = line.slice(7);
-          else if (line.indexOf('data: ') === 0) events.push({ type: type, data: line.slice(6) });
+          if (line.indexOf(':') === 0) continue;            // SSE comment line
+          if (line.indexOf('event:') === 0) type = line.slice(6).trim();
+          else if (line.indexOf('data:') === 0) dataLines.push(line.slice(5).replace(/^ /, ''));
         }
-        return { pending: pending, events: events };
+        return { type: type, data: dataLines.join('\n') };
       }
 
       function authHeaders() {
@@ -249,20 +250,31 @@
 
           var reader = res.body.getReader();
           var dec = new TextDecoder();
-          var pending = '', text = '', receipt = null;
+          var buf = '', text = '', receipt = null;
+
+          function dispatch(block) {
+            if (!block.trim()) return;
+            var e = parseBlock(block);
+            if (!e.data) return;
+            var d;
+            try { d = JSON.parse(e.data); } catch (_) { return; }
+            if (e.type === 'text') { text += (typeof d === 'string' ? d : (d.message || d.text || '')); output.innerHTML = '<div class="app-answer">' + md(text) + '</div>'; }
+            else if (e.type === 'receipt') { receipt = d; }
+            else if (e.type === 'error') { throw new Error(d.message || d.error || 'stream error'); }
+          }
+
           while (true) {
             var r = await reader.read();
             if (r.done) break;
-            var parsed = parseSse(pending, dec.decode(r.value, { stream: true }));
-            pending = parsed.pending;
-            for (var i = 0; i < parsed.events.length; i++) {
-              var e = parsed.events[i], d;
-              try { d = JSON.parse(e.data); } catch (_) { continue; }
-              if (e.type === 'text') { text += (typeof d === 'string' ? d : (d.message || d.text || '')); output.innerHTML = '<div class="app-answer">' + md(text) + '</div>'; }
-              else if (e.type === 'receipt') { receipt = d; }
-              else if (e.type === 'error') { throw new Error(d.message || d.error || 'stream error'); }
+            buf += dec.decode(r.value, { stream: true }).replace(/\r\n/g, '\n');
+            var idx;
+            while ((idx = buf.indexOf('\n\n')) !== -1) {     // process each complete event
+              var block = buf.slice(0, idx);
+              buf = buf.slice(idx + 2);
+              dispatch(block);
             }
           }
+          if (buf.trim()) dispatch(buf);                      // flush a trailing event with no blank line
           history = (history || []).concat([{ role: 'user', content: message }, { role: 'assistant', content: text }]).slice(-20);
           renderFinal(text, receipt, false);
         } catch (err) {
