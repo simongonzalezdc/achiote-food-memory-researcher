@@ -51,6 +51,7 @@ achiote-food-memory-researcher/
     source-quality-ladder.md
     source-list.md
     sensory-mechanisms.md
+    dish-family-thinking.md
     local-access-playbook.md
     language-switching.md
     quality-gates.md
@@ -68,6 +69,7 @@ Each file has one job:
 | `reference/source-quality-ladder.md` | How sources are weighted and used. |
 | `reference/source-list.md` | Where to look by research task, and the catch with each source. |
 | `reference/sensory-mechanisms.md` | Food-science mechanisms to reason from when identity is uncertain. |
+| `reference/dish-family-thinking.md` | How to place a fragment in a dish family and reason about its variants. |
 | `reference/local-access-playbook.md` | How to find exact ingredients, local substitutes, and cheap proxies. |
 | `reference/language-switching.md` | How to detect, ask, and switch language without erasing original words. |
 | `reference/quality-gates.md` | Tests for whether Achiote behaved like a researcher. |
