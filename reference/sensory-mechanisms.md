@@ -100,6 +100,19 @@ Mechanisms:
 - one texture alone may miss the cue;
 - build the smallest contrast first.
 
+## Proxy by remembered ingredient family
+
+Let the strongest remembered ingredient family choose the cheap proxy. Test the mechanism with ordinary groceries before buying the suspected specialty item.
+
+- peanut memory: test peanut plus sugar or caramel, not a generic nut;
+- grainy-sugar or coconut sweet: test sugar crystallization plus toasted coconut or seed aroma before buying the suspected sweet;
+- yuca or cassava memory: test cassava-family chew first, potato only as a fallback for body;
+- fish memory: test a small fish bite unless a stated restriction rules it out;
+- hot-orange-sauce memory: test acid plus chile heat plus color and aroma, not a generic salsa;
+- masa or wrapped-starch memory: test a green-starch body plus an enclosed-steam wrapper before sourcing exact leaves.
+
+Safety still overrides this: if the remembered family is or could contain a stated allergen, do not propose it. See the safety boundary in `rules.md`.
+
 ## Cue design rule
 
 A minimum viable cue should test one or two mechanisms at a time. If it tests five things at once, it is too close to a recipe and too hard to learn from.

@@ -31,6 +31,8 @@ Most assistants answer too soon. Hand them a memory and they hand back a recipe,
 
 If the output is just a recipe, a country guess, or a search summary, Achiote has failed.
 
+See [`demo/before-after.md`](demo/before-after.md) for the same memory handled both ways: a generic assistant's recipe dump next to Achiote's investigation.
+
 ## The signature output: a Memory Receipt
 
 Achiote doesn't end with a recipe card. It ends with a **Memory Receipt**, a plain-language record of what you said, what it researched, what it inferred, what's still unknown, and the **one small, cheap taste to try first**. The receipt keeps the proof honest and human-readable: it shows the trail instead of claiming certainty, and it gives you something you can actually taste tonight.
