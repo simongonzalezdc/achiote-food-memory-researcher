@@ -60,13 +60,14 @@ Build + reference tests pass.
 
 | Thing | Location |
 |---|---|
-| **This repo (submission + frontend)** | `github.com/simongonzalezdc/achiote-food-memory-researcher` (push here) |
-| Backend (MCP/HTTP server, prompt, reference data) | `github.com/KyaniteLabs/Achiote` — local: `../achiote` (main is branch-protected) |
-| Live site | https://achiote.kyanitelabs.tech (landing) · `/app.html` (app) |
-| VPS | Hostinger `srv1542844`, reached via Tailscale `root@100.92.68.103` (public SSH firewalled) |
-| Deploy | `/tmp/achiote-deploy.sh` — rsyncs frontend → `/docker/achiote/source/docs/landing/`, backend → `/docker/achiote/source/src/`, then `docker compose build && up -d` + healthcheck. Tags a rollback image each run (`achiote:predeploy-*`). |
-| Demo password (app `/ask`) | `x-demo-password: achiote-dev-2025` |
+| **This repo (submission + frontend)** | `github.com/simongonzalezdc/achiote-food-memory-researcher` |
+| Live site | https://achiote.kyanitelabs.tech (landing) and `/app.html` (app) |
+| Demo password (app `/ask`) | Provided out of band. Set `ACHIOTE_DEMO_PASSWORD` before the live tests; never commit it. |
 | Frontend cache-busting | `site.css?v=N`, `bg-texture.jpg?v=N` query params (bump on change) |
+
+> The hosted research service that answers `/ask` is private infrastructure and is intentionally
+> NOT described in this public repo (no server source, no host, no keys). Test it as a black box
+> through the live URL above, exactly like the live demo a reviewer would use.
 
 Frontend is **baked into the Docker image** (no bind mount), so any frontend change requires a
 rebuild via the deploy script. The owner is low on Claude usage; **prefer not to redeploy** unless
@@ -91,7 +92,7 @@ Also run the bundled smoke script: `bash codex-smoke-test.sh` (in this repo root
 
 ### 4b. Live API checks (no VPS access needed — hit the public URL)
 ```bash
-PW='achiote-dev-2025'
+PW="${ACHIOTE_DEMO_PASSWORD:?Set ACHIOTE_DEMO_PASSWORD (ask the maintainer); do not hardcode}"
 Q='{"message":"My grandmother in Oaxaca made mole negro with chilhuacle chiles. I live in Des Moines, Iowa. Where can I buy the chiles near me and what can I substitute?","history":[],"consent":{"qualitySignals":false}}'
 curl -sN --max-time 180 -X POST https://achiote.kyanitelabs.tech/ask \
   -H 'Content-Type: application/json' -H "x-demo-password: $PW" -d "$Q" > /tmp/r.txt

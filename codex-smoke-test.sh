@@ -3,7 +3,7 @@
 # Usage: bash codex-smoke-test.sh   (reads pages + runs API checks, prints PASS/FAIL summary)
 set -uo pipefail
 BASE="https://achiote.kyanitelabs.tech"
-PW="achiote-dev-2025"
+PW="${ACHIOTE_DEMO_PASSWORD:?Set ACHIOTE_DEMO_PASSWORD before running (ask the maintainer); never hardcode}"
 pass=0; fail=0
 chk(){ if eval "$2"; then echo "PASS  $1"; pass=$((pass+1)); else echo "FAIL  $1"; fail=$((fail+1)); fi; }
 
