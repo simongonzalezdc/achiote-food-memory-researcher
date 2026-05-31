@@ -58,28 +58,20 @@ jobs:
           done
           echo "HTML sanity passed."
 
-      - name: Inline app script parses (no syntax errors)
+      - name: App script parses (no syntax errors)
         run: |
           set -euo pipefail
-          # Extract the inline <script> from app.html and check it parses under Node.
-          node -e '
-            const fs = require("fs");
-            const html = fs.readFileSync("app.html", "utf8");
-            const m = html.match(/<script>([\s\S]*?)<\/script>/i);
-            if (!m) { console.error("No inline <script> found in app.html"); process.exit(1); }
-            const vm = require("vm");
-            new vm.Script(m[1], { filename: "app.html#script" });
-            console.log("app.html inline script parses OK");
-          '
+          node --check research-app.js
+          echo "research-app.js parses OK"
 
       - name: Endpoint consistency (app must call /ask, never /api/ask)
         run: |
           set -euo pipefail
-          if grep -rn "api/ask" --include=*.html --include=*.md .; then
+          if grep -rn "api/ask" --include=*.html --include=*.js --include=*.md .; then
             echo "::error::Found /api/ask reference; the live server endpoint is /ask"
             exit 1
           fi
-          grep -q "'/ask'" app.html || { echo "::error file=app.html::app.html must POST to /ask"; exit 1; }
+          grep -Eq "['\"]\/ask['\"]" research-app.js || { echo "::error file=research-app.js::app must POST to /ask"; exit 1; }
           echo "Endpoint usage consistent."
 
       - name: No leaked secrets
