@@ -75,20 +75,10 @@ The live Achiote product proves the same workflow as a working app:
 - Live site: https://achiote.kyanitelabs.tech/
 - Week 6 proof page: https://achiote.kyanitelabs.tech/week6
 - Live app: https://achiote.kyanitelabs.tech/app
-- Sample artifact in this repo: `site/proof/sample-reconstruction-artifact.md`
+- Sample artifact in this repo: `demo/sample-reconstruction-artifact.md`
 
 Those are proof surfaces, not replacements for the folder. The Week 6 folder is the researcher brain. The existing app/server proves that the workflow has already been implemented as a structured MCP/HTTP product.
 
 ## Public proof surface
 
-The `site/` folder holds a cohesive, self-contained proof website (one shared design system in `site/site.css`):
-
-```text
-site/index.html    Landing, the mission, the researcher-not-summarizer case, the Memory Receipt
-site/app.html      The working researcher, POST /ask (SSE), returns a live Memory Receipt
-site/week6.html    The Week 6 proof, the folder is the researcher
-site/site.css      Shared design system (tokens, type, components)
-site/proof/        Fonts, images, favicon, and the sample reconstruction artifact
-```
-
-Together these link the folder idea, the live app journey, the Memory Receipt, and the proof story in one judge-friendly surface at `https://achiote.kyanitelabs.tech/`.
+The proof website is live, not bundled here. This repo stays the clean researcher folder; the landing page, the working app, and the Week 6 proof page all live at the links above. The folder is the deliverable, the site is proof you can click.
