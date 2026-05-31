@@ -82,6 +82,11 @@
     var target = thread.lastElementChild || thread;
     if (target && target.scrollIntoView) target.scrollIntoView({ block: 'end', inline: 'nearest' });
   }
+  function track(event, props) {
+    if (window.AchioteTelemetry && typeof window.AchioteTelemetry.track === 'function') {
+      window.AchioteTelemetry.track(event, props || {});
+    }
+  }
 
   /* --------------------------- chat messages ------------------------- */
   function addUser(text) {
@@ -278,27 +283,44 @@
   }
 
   /* --------------------------- send / run ---------------------------- */
-  function run(aiEl, message) {
+  function run(aiEl, message, metadata) {
     busy = true; sendBtn.disabled = true;
+    track('ask_started', {
+      source: metadata && metadata.source || 'typed',
+      category: metadata && metadata.category || 'none',
+      hasHistory: history.length > 0
+    });
     return fetch(ASK, {
       method: 'POST',
       headers: headers(),
       body: JSON.stringify({ message: message, history: history, consent: { qualitySignals: false } })
     }).then(function (res) {
       if (!res.ok) throw new Error('status ' + res.status);
-      return streamInto(res, aiEl, message);
+      return streamInto(res, aiEl, message).then(function () {
+        track('ask_succeeded', {
+          source: metadata && metadata.source || 'typed',
+          category: metadata && metadata.category || 'none',
+          hasHistory: history.length > 0
+        });
+      });
     }).catch(function (err) {
       clearTyping(aiEl);
       var e = document.createElement('div');
       e.className = 'ai-text err';
       e.textContent = 'Something interrupted the researcher. Give it another try in a moment.';
       aiEl.appendChild(e);
+      track('ask_failed', {
+        source: metadata && metadata.source || 'typed',
+        category: metadata && metadata.category || 'none',
+        hasHistory: history.length > 0,
+        reason: 'request_failed'
+      });
     }).then(function () {
       busy = false; sendBtn.disabled = false; input.focus();
     });
   }
 
-  function send(text) {
+  function send(text, metadata) {
     var val = (text != null ? text : input.value).trim();
     if (!val || busy) return;
     input.value = '';
@@ -307,7 +329,7 @@
     addUser(val);
     var aiEl = addAI();
     scrollDown();
-    run(aiEl, val);
+    run(aiEl, val, metadata || { source: 'typed', category: 'none' });
   }
 
   /* --------------------------- voice (STT) --------------------------- */
@@ -333,6 +355,7 @@
   function toggleMic() {
     if (!voiceReady) return;
     if (recorder && recorder.state === 'recording') { recorder.stop(); return; }
+    track('voice_started', { source: 'mic' });
     navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
       chunks = [];
       recorder = new MediaRecorder(stream);
@@ -349,6 +372,7 @@
       recorder.start();
     }).catch(function () {
       if (vstatus) vstatus.textContent = 'Microphone permission is needed for voice input.';
+      track('voice_failed', { source: 'mic', reason: 'permission' });
     });
   }
   function transcribe(blob) {
@@ -364,8 +388,12 @@
         input.value = (input.value ? input.value + ' ' : '') + (body.text || '');
         input.focus();
         if (vstatus) vstatus.textContent = 'Transcript ready. Fix any names or spelling, then send.';
+        track('voice_transcribed', { source: 'mic' });
       })
-      .catch(function () { if (vstatus) vstatus.textContent = 'Could not transcribe that. Try typing instead.'; });
+      .catch(function () {
+        if (vstatus) vstatus.textContent = 'Could not transcribe that. Try typing instead.';
+        track('voice_failed', { source: 'mic', reason: 'transcription' });
+      });
   }
 
   /* ----------------------------- wire up ----------------------------- */
@@ -375,7 +403,11 @@
   });
   if (micBtn) micBtn.addEventListener('click', toggleMic);
   Array.prototype.forEach.call(document.querySelectorAll('.suggestion'), function (b) {
-    b.addEventListener('click', function () { send(b.getAttribute('data-fill') || b.textContent); });
+    b.addEventListener('click', function () {
+      var category = b.getAttribute('data-category') || 'demo';
+      track('onboarding_prompt_selected', { source: 'suggestion', category: category });
+      send(b.getAttribute('data-fill') || b.textContent, { source: 'suggestion', category: category });
+    });
   });
 
   initVoice();
