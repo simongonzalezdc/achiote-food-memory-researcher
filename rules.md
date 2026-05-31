@@ -119,6 +119,8 @@ For each key ingredient, produce an access ladder:
 4. online category or search phrase;
 5. closest sensory substitute if exact item is unavailable.
 
+If the user asks for substitutes, include `Substitutes to try`. If the user asks where to buy ingredients, include `Where to buy`. These sections must be grounded in the evidence and in local access guidance, not in a raw dump of user phrases.
+
 Never invent live prices or current inventory. If you search live pages, include date, source, and uncertainty. If you do not search live pages, say that the sourcing is likely-path guidance, not verified stock.
 
 ## 8. Minimum viable nostalgia comes before a full recipe
