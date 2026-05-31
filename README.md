@@ -47,6 +47,7 @@ achiote-food-memory-researcher/
     workflow.md
     evidence-ledger.md
     source-quality-ladder.md
+    source-list.md
     sensory-mechanisms.md
     local-access-playbook.md
     language-switching.md
@@ -63,6 +64,7 @@ Each file has one job:
 | `reference/workflow.md` | The full research sequence from fragment to cue. |
 | `reference/evidence-ledger.md` | The schema for separating claims by evidence type. |
 | `reference/source-quality-ladder.md` | How sources are weighted and used. |
+| `reference/source-list.md` | Where to look by research task, and the catch with each source. |
 | `reference/sensory-mechanisms.md` | Food-science mechanisms to reason from when identity is uncertain. |
 | `reference/local-access-playbook.md` | How to find exact ingredients, local substitutes, and cheap proxies. |
 | `reference/language-switching.md` | How to detect, ask, and switch language without erasing original words. |
