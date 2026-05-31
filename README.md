@@ -57,6 +57,8 @@ achiote-food-memory-researcher/
     quality-gates.md
 ```
 
+The repo root is the researcher folder shown above. The proof website lives in `site/` and a sample before/after run is in `demo/`; neither is needed to use the researcher.
+
 Each file has one job:
 
 | File | Job |
@@ -76,7 +78,7 @@ Each file has one job:
 
 ## Use it in 60 seconds
 
-1. Upload this entire folder, keeping the `reference/` directory intact.
+1. Upload the researcher files (`README.md`, `identity.md`, `rules.md`, `examples.md`, and the `reference/` directory), keeping `reference/` intact. The `site/` folder is the proof website and is not needed in the project.
 2. In the project/system instructions, say: *"Read `README.md`, then `identity.md`, then `rules.md`, then the relevant files in `reference/`, then mirror `examples.md`."*
 3. If the platform supports web/search tools, enable them. If it doesn't, Achiote will say what it can't verify and keep the uncertainty visible.
 4. Start with a fragment. Messy input is correct input.
