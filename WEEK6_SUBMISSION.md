@@ -4,7 +4,7 @@ This is the Week 6 "The Researcher" submission guide.
 
 ## Submission blurb (ready to paste)
 
-> **Achiote** is a food-memory researcher for immigrant and diaspora families. Drop the folder into a Claude project and it reconstructs the half-remembered dishes no one wrote down — from a sound-alike, a smell, or a color — by investigating instead of guessing: it weighs sources, separates what you said from what it inferred, keeps the unknowns visible, and gives you one small, cheap taste to test the memory before any full recipe. Most useful for anyone trying to recover a family dish, drink, sauce, or ritual when they don't know the name, the language, or where to find the ingredients.
+> **Achiote** is a food-memory researcher for immigrant and diaspora families. Drop the folder into a Claude project and it reconstructs the half-remembered dishes no one wrote down, from a sound-alike, a smell, or a color, by investigating instead of guessing: it weighs sources, separates what you said from what it inferred, keeps the unknowns visible, and gives you one small, cheap taste to test the memory before any full recipe. Most useful for anyone trying to recover a family dish, drink, sauce, or ritual when they don't know the name, the language, or where to find the ingredients.
 
 ## Start here
 
@@ -84,9 +84,9 @@ Those are proof surfaces, not replacements for the folder. The Week 6 folder is 
 This repo ships a cohesive, self-contained site (one shared design system in `site.css`):
 
 ```text
-index.html    Landing — the mission, the researcher-not-summarizer case, the Memory Receipt
-app.html      The working researcher — POST /ask (SSE), returns a live Memory Receipt
-week6.html    The Week 6 proof — the folder is the researcher
+index.html    Landing, the mission, the researcher-not-summarizer case, the Memory Receipt
+app.html      The working researcher, POST /ask (SSE), returns a live Memory Receipt
+week6.html    The Week 6 proof, the folder is the researcher
 site.css      Shared design system (tokens, type, components)
 proof/        Fonts, images, favicon, and the sample reconstruction artifact
 ```

@@ -2,15 +2,15 @@
 
 ### Taste your way home.
 
-Achiote is a food-memory researcher. It reconstructs the dishes your family never wrote down — from a sound-alike, a smell, a color, a wrapper, the shape of a Sunday — and hands you one small taste to find out whether the memory is right.
+Achiote is a food-memory researcher. It reconstructs the dishes your family never wrote down, from a sound-alike, a smell, a color, a wrapper, the shape of a Sunday, and hands you one small taste to find out whether the memory is right.
 
-It began as a gift to my family: a way to taste home from a country that still feels new. Recipes carry the people who made them, and when the language slips a generation, the flavor is often the last thing left to pass down. Achiote is for every family that carried a kitchen across a border — and for the kids who have the taste but not the words.
+It began as a gift to my family: a way to taste home from a country that still feels new. Recipes carry the people who made them, and when the language slips a generation, the flavor is often the last thing left to pass down. Achiote is for every family that carried a kitchen across a border, and for the kids who have the taste but not the words.
 
 ---
 
 ## What it is
 
-Drop this folder into any capable AI workspace that supports project files or persistent instructions (Claude Projects, ChatGPT Projects/custom GPT knowledge, Gemini Gems, Codex). The model becomes **Achiote**: a research partner for recovering half-remembered family foods and drinks from fragments — rough names, sound-alikes, family words, sensory clues, local ingredient access, and evidence-bounded research.
+Drop this folder into any capable AI workspace that supports project files or persistent instructions (Claude Projects, ChatGPT Projects/custom GPT knowledge, Gemini Gems, Codex). The model becomes **Achiote**: a research partner for recovering half-remembered family foods and drinks from fragments, rough names, sound-alikes, family words, sensory clues, local ingredient access, and evidence-bounded research.
 
 > **Domain:** food and drink memory reconstruction for families, immigrants, diaspora communities, and anyone trying to recover a dish, drink, sauce, sweet, snack, or ritual from incomplete memory.
 
@@ -18,11 +18,11 @@ A second, professional mode serves restaurants, mixologists, food manufacturers,
 
 ## Why this is a researcher, not a summarizer
 
-Most assistants answer too soon. Hand them a memory and they hand back a recipe — a confident guess dressed as a fact. Achiote works the way a real researcher does:
+Most assistants answer too soon. Hand them a memory and they hand back a recipe, a confident guess dressed as a fact. Achiote works the way a real researcher does:
 
 1. It treats your memory as **evidence**, not as a prompt to obey.
 2. It finds what's missing **before** it researches.
-3. It asks **0–3 high-yield questions** only when the memory is too sparse — never an interrogation.
+3. It asks **0 to 3 high-yield questions** only when the memory is too sparse, never an interrogation.
 4. It researches names, regions, techniques, sensory mechanisms, and ingredient access itself.
 5. It **weighs sources** instead of flattening them into a list.
 6. It keeps `user-said`, `researched`, `inferred`, and `unknown` claims separate, and names what would change its mind.
@@ -33,7 +33,7 @@ If the output is just a recipe, a country guess, or a search summary, Achiote ha
 
 ## The signature output: a Memory Receipt
 
-Achiote doesn't end with a recipe card. It ends with a **Memory Receipt** — a plain-language record of what you said, what it researched, what it inferred, what's still unknown, and the **one small, cheap taste to try first**. The receipt keeps the proof honest and human-readable: it shows the trail instead of claiming certainty, and it gives you something you can actually taste tonight.
+Achiote doesn't end with a recipe card. It ends with a **Memory Receipt**, a plain-language record of what you said, what it researched, what it inferred, what's still unknown, and the **one small, cheap taste to try first**. The receipt keeps the proof honest and human-readable: it shows the trail instead of claiming certainty, and it gives you something you can actually taste tonight.
 
 ## Folder map
 
@@ -98,7 +98,7 @@ Achiote first collects clues and decides whether it has enough signal. If the me
 
 ## Limits
 
-Achiote is not medical, legal, or nutrition advice. It does not invent live prices, inventory, citations, family facts, or certainty. If it uses web search, it says what it searched and what the sources can and cannot prove. If you share private family details, it keeps research queries on public food facts — not private names or stories.
+Achiote is not medical, legal, or nutrition advice. It does not invent live prices, inventory, citations, family facts, or certainty. If it uses web search, it says what it searched and what the sources can and cannot prove. If you share private family details, it keeps research queries on public food facts, not private names or stories.
 
 ## Original Achiote
 
