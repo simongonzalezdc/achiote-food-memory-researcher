@@ -1,8 +1,8 @@
-/* Achiote — conversational food-memory researcher.
+/* Achiote: conversational food-memory researcher.
    External, CSP-safe (script-src 'self'); no inline handlers.
    Restores: threaded conversation (asks questions, you reply), one continuous
    Memory Receipt, live progress trace, well-formatted results, and voice-to-TEXT
-   input (transcription only — no talk-back). */
+   input (transcription only, no talk-back). */
 (function () {
   'use strict';
 
@@ -29,7 +29,7 @@
     return String(s == null ? '' : s)
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
-  // Inline markdown (escape first, then format) — XSS-safe.
+  // Inline markdown (escape first, then format), XSS-safe.
   function inlineMd(t) {
     return esc(t)
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
@@ -153,7 +153,7 @@
     var ev = r.evidence || {};
     var qs = Array.isArray(r.nextBestQuestions) ? r.nextBestQuestions : [];
     var taste = r.firstTinyTasteTest;
-    // A real reconstruction has researched/inferred facts or a first taste — NOT just a
+    // A real reconstruction has researched/inferred facts or a first taste, NOT just a
     // userSaid echo. A clarifying turn only echoes userSaid + asks questions.
     var hasReconstruction = (Array.isArray(ev.researched) && ev.researched.length) ||
       (Array.isArray(ev.inferred) && ev.inferred.length) ||
@@ -178,7 +178,7 @@
     if (qs.length) {
       html += '<div class="r-questions"><span class="r-label">A few questions to get this right</span><ol>' +
         qs.map(function (q) { return '<li>' + esc(q) + '</li>'; }).join('') + '</ol>' +
-        '<p class="r-hint">Answer any of these below — I’ll keep building this same receipt.</p></div>';
+        '<p class="r-hint">Answer any of these below, and I’ll keep building this same receipt.</p></div>';
     }
     if (taste && (taste.cue || taste.title)) {
       html += '<div class="r-taste"><span class="r-label">First taste' +
@@ -372,9 +372,9 @@
       .then(function (body) {
         input.value = (input.value ? input.value + ' ' : '') + (body.text || '');
         input.focus();
-        if (vstatus) vstatus.textContent = 'Transcript ready — fix any names or spelling, then send.';
+        if (vstatus) vstatus.textContent = 'Transcript ready. Fix any names or spelling, then send.';
       })
-      .catch(function () { if (vstatus) vstatus.textContent = 'Could not transcribe that — try typing instead.'; });
+      .catch(function () { if (vstatus) vstatus.textContent = 'Could not transcribe that. Try typing instead.'; });
   }
 
   /* ----------------------------- wire up ----------------------------- */
