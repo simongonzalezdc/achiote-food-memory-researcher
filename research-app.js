@@ -31,9 +31,16 @@
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
       .replace(/(^|[^\*])\*([^\*\n]+)\*/g, '$1<em>$2</em>');
   }
+  function shapeAssistantText(s) {
+    return String(s == null ? '' : s)
+      .replace(/\r\n/g, '\n')
+      .replace(/:\s+(1[.)]\s+)/g, ':\n\n$1')
+      .replace(/([.!?])\s+(1[.)]\s+)/g, '$1\n\n$2')
+      .replace(/(\S)\s+([2-9][.)]\s+)/g, '$1\n$2');
+  }
   // Block-level markdown -> proper <p>/<ul>/<ol>/<h3>/<h4> so prose reads as typographic blocks.
   function md(s) {
-    var blocks = String(s == null ? '' : s).replace(/\r\n/g, '\n').split(/\n{2,}/);
+    var blocks = shapeAssistantText(s).split(/\n{2,}/);
     var out = '';
     blocks.forEach(function (b) {
       var t = b.trim();
@@ -239,6 +246,7 @@
         if (r.done) {
           if (buf.trim()) handle(buf);
           clearTyping(aiEl);
+          aiEl.classList.add('complete');
           // App meets you in your language: tag the reply's script so it gets the right font + RTL.
           var lg = detectLang(text);
           if (lg) { aiEl.setAttribute('lang', lg); if (lg === 'ar' || lg === 'he') aiEl.setAttribute('dir', 'rtl'); }

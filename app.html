@@ -37,25 +37,59 @@
     .msg.ai { align-self: flex-start; width: 100%; }
 
     .ai-text {
-      max-width: 62ch; margin-top: var(--s4); padding: 17px 20px 18px;
-      color: #ddc6a6; font-size: clamp(0.9rem, 0.86rem + 0.12vw, 0.96rem);
-      line-height: 1.62; text-wrap: pretty;
+      max-width: 56ch; margin-top: var(--s4); padding: 14px 16px 15px;
+      color: rgba(236,216,186,0.82); font-size: 0.86rem;
+      line-height: 1.55; text-wrap: pretty;
       background:
-        linear-gradient(145deg, rgba(252,239,218,0.085), rgba(252,239,218,0.032)),
-        rgba(32, 16, 9, 0.46);
-      border: 1px solid rgba(252,239,218,0.15);
-      border-left: 3px solid rgba(234,165,62,0.62);
+        linear-gradient(145deg, rgba(252,239,218,0.075), rgba(252,239,218,0.026)),
+        rgba(22, 11, 7, 0.42);
+      border: 1px solid rgba(252,239,218,0.13);
+      border-left: 3px solid rgba(234,165,62,0.48);
       border-radius: var(--r-md);
       box-shadow:
         inset 0 1px 0 rgba(252,239,218,0.08),
-        0 16px 36px rgba(0,0,0,0.22);
-      backdrop-filter: blur(12px) saturate(1.06);
+        0 12px 28px rgba(0,0,0,0.18);
+      backdrop-filter: blur(14px) saturate(1.03);
     }
     .ai-text > :first-child { margin-top: 0; }
     .ai-text > :last-child { margin-bottom: 0; }
-    .ai-text p { margin: 0 0 0.72em; }
-    .ai-text ul, .ai-text ol { margin: 0.35em 0 0.75em; padding-inline-start: 1.2em; }
-    .ai-text li { margin: 0.2em 0; line-height: 1.52; }
+    .ai-text p { margin: 0 0 0.68em; }
+    .ai-text ul { margin: 0.35em 0 0.75em; padding-inline-start: 1.2em; }
+    .ai-text ol {
+      counter-reset: question;
+      display: grid;
+      gap: 8px;
+      margin: 0.55em 0 0.2em;
+      padding: 0;
+      list-style: none;
+    }
+    .ai-text li { margin: 0.2em 0; line-height: 1.48; }
+    .ai-text ol li {
+      counter-increment: question;
+      position: relative;
+      margin: 0;
+      padding: 10px 12px 10px 38px;
+      color: rgba(252,239,218,0.9);
+      background: rgba(252,239,218,0.055);
+      border: 1px solid rgba(252,239,218,0.11);
+      border-radius: var(--r-sm);
+    }
+    .ai-text ol li::before {
+      content: counter(question);
+      position: absolute;
+      left: 11px;
+      top: 11px;
+      width: 18px;
+      height: 18px;
+      display: grid;
+      place-items: center;
+      border-radius: var(--r-xs);
+      background: rgba(234,165,62,0.18);
+      color: var(--gold-soft);
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      line-height: 1;
+    }
     .ai-text li::marker { color: var(--gold); }
     .ai-text strong { color: #f4dfc0; font-weight: 700; }
     .ai-text em { font-style: italic; }
@@ -80,12 +114,14 @@
     @media (prefers-reduced-motion: reduce) { .typing span { animation: none; } }
 
     /* Live progress trace */
-    .trace { margin-top: var(--s4); border-left: 2px solid var(--line-strong); padding: var(--s3) var(--s4); background: var(--bg-1); border-radius: 0 var(--r-sm) var(--r-sm) 0; }
+    .trace { margin-top: var(--s4); border-left: 2px solid var(--line-strong); padding: var(--s3) var(--s4); background: rgba(42,22,13,0.72); border-radius: 0 var(--r-sm) var(--r-sm) 0; }
     .trace-head { font-size: 0.64rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
     .trace-list { display: flex; flex-direction: column; gap: 2px; max-height: 168px; overflow: auto; font-family: var(--font-mono); font-size: 0.78rem; line-height: 1.5; }
     .trace-item { color: var(--text-2); }
     .trace-item.tool_call, .trace-item.tool_result { color: var(--text-1); }
     .trace-item.error { color: var(--gold); }
+    .msg.ai.complete .trace { opacity: 0.62; }
+    .msg.ai.complete .trace-list { max-height: 76px; }
 
     /* Memory Receipt (the signature output) */
     .receipt-paper {
@@ -175,7 +211,9 @@
 
     @media (max-width: 560px) {
       .msg.user { max-width: 92%; }
-      .ai-text { padding: 15px 16px 16px; font-size: 0.9rem; }
+      .ai-text { max-width: 100%; padding: 13px 14px 14px; font-size: 0.84rem; line-height: 1.5; }
+      .ai-text ol li { padding: 9px 10px 9px 34px; }
+      .ai-text ol li::before { left: 9px; top: 10px; }
       #thread { padding-bottom: 244px; }
       .receipt-paper { padding: var(--s5) 18px; }
     }
@@ -239,12 +277,12 @@
   <footer class="site-footer">
     <div class="container">
       <span class="footer-brand">Achiote</span>
-      <p>Research-first food-memory reconstruction. It investigates in conversation, weighing sources, marking the unknowns, and never inventing your family's recipe.</p>
+      <p>Research-first food-memory reconstruction by Simón González De Cruz. It investigates in conversation, weighing sources, marking the unknowns, and never inventing your family's recipe.</p>
       <p class="footer-safety">Achiote helps you explore food memories. It is not medical, allergy, or nutritional advice, and it cannot guarantee that any food, ingredient, or substitution is safe for you. If you have allergies or dietary restrictions, check every ingredient yourself and talk to a qualified professional. Any tasting you do is your own choice and at your own risk.</p>
     </div>
   </footer>
 
-  <script src="research-app.js" defer></script>
+  <script src="research-app.js?v=2" defer></script>
   <script src="reveal.js" defer></script>
 </body>
 </html>
