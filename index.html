@@ -59,23 +59,6 @@
       z-index: 2;
       background: linear-gradient(180deg, rgba(20,14,8,0) 55%, rgba(20,14,8,0.35) 100%);
     }
-    .hero-seal {
-      position: absolute;
-      z-index: 3;
-      left: -22px; bottom: 26px;
-      width: 116px; height: 116px;
-      display: grid; place-items: center; gap: 2px;
-      border: 1.5px solid var(--achiote-deep);
-      border-radius: var(--r-btn);
-      background: var(--text-0);
-      box-shadow: 0 0 0 4px rgba(179, 53, 26, 0.16), 0 18px 40px rgba(36,23,12,0.18);
-      color: var(--achiote-deep);
-      font-size: 0.66rem; font-weight: 700; letter-spacing: 0.18em;
-      line-height: 1.5; text-align: center; text-transform: uppercase;
-      transform: rotate(-8deg);
-    }
-    .hero-seal span { width: 5px; height: 5px; border-radius: 999px; background: var(--achiote); }
-
     /* Mission */
     .mission { text-align: center; }
     .mission p {
@@ -90,6 +73,7 @@
     }
     .mission p.mission-sub { max-width: 56ch; margin: var(--s6) auto 0; font-family: var(--font-body); font-weight: 400; font-size: 1.0625rem; line-height: 1.62; color: var(--text-2); }
     .mission .signoff { margin-top: var(--s6); font-family: var(--font-display); font-weight: 700; font-size: clamp(1.2rem, 2.6vw, 1.55rem); letter-spacing: 0.005em; color: var(--gold); line-height: 1.32; text-wrap: balance; }
+    .mission .credit { margin-top: var(--s3); font-family: var(--font-mono); font-size: 0.72rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-2); }
 
     /* Contrast: summarizer vs researcher */
     .contrast { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s4); margin-top: var(--s7); }
@@ -196,7 +180,6 @@
         </div>
         <div class="hero-figure">
           <img src="proof/images/achiote-hands.jpg" alt="A grandmother's hands opening an achiote pod, revealing the red seeds that color and flavor home kitchens." />
-          <div class="hero-seal" aria-hidden="true">Food<span></span>is<span></span>memory</div>
         </div>
       </div>
     </section>
@@ -208,6 +191,7 @@
         <p>The fortune in your heart can't be lost or left behind. Let's find it again.</p>
         <p class="mission-sub">Recipes carry the people who made them. When a family crosses a border, the language can slip a generation before anyone notices, and the flavor becomes the last thing left to share. Achiote helps you find it again, and sit back down at the same table.</p>
         <p class="signoff">For the ancestors who knew it by heart, and the generations who will.</p>
+        <p class="credit">By Simón González De Cruz</p>
       </div>
     </section>
 
@@ -333,9 +317,10 @@
   <footer class="site-footer">
     <div class="container">
       <span class="footer-brand">Achiote</span>
-      <p>Research-first food-memory reconstruction for families, immigrants, and diaspora communities. Built with interpretable context methodology.</p>
+      <p>Research-first food-memory reconstruction for families, immigrants, and diaspora communities. Built by Simón González De Cruz with interpretable context methodology.</p>
     </div>
   </footer>
+  <script src="site-telemetry.js?v=1" defer></script>
   <script src="reveal.js" defer></script>
 </body>
 </html>

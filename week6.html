@@ -50,7 +50,7 @@
     .checks li::before { content: ""; width: 8px; height: 8px; flex: 0 0 auto; margin-top: 0.45em; border-radius: 999px; background: var(--gold); box-shadow: 0 0 0 3px rgba(231,162,60,0.16); }
 
     .quote { max-width: 880px; margin: var(--s9) auto 0; padding-left: var(--s7); position: relative; font-family: var(--font-display); font-optical-sizing: auto; font-size: clamp(1.5rem, 3vw, 2.15rem); font-style: italic; font-weight: 700; line-height: 1.24; color: var(--text-0); text-wrap: balance; }
-    .quote::before { content: "\201C"; position: absolute; left: -6px; top: -0.32em; color: var(--gold); font-size: 3.4em; line-height: 1; opacity: 0.5; }
+    .quote::before { content: ""; position: absolute; left: 0; top: 0.1em; bottom: 0.12em; width: 4px; background: var(--gold); opacity: 0.62; border-radius: var(--r-xs); }
 
     @media (max-width: 900px) {
       .steps { grid-template-columns: 1fr 1fr; }
@@ -151,9 +151,10 @@
   <footer class="site-footer">
     <div class="container">
       <span class="footer-brand">Achiote</span>
-      <p>Week 6 submission. The folder is the researcher; this page, the app, and the Memory Receipt are its proof surfaces. Built with interpretable context methodology.</p>
+      <p>Week 6 submission by Simón González De Cruz. The folder is the researcher; this page, the app, and the Memory Receipt are its proof surfaces. Built with interpretable context methodology.</p>
     </div>
   </footer>
+  <script src="site-telemetry.js?v=1" defer></script>
   <script src="reveal.js" defer></script>
 </body>
 </html>
