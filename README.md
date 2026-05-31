@@ -2,7 +2,7 @@
 
 ### Taste your way home.
 
-Achiote is a food-memory researcher. It reconstructs the dishes your family never wrote down, from a sound-alike, a smell, a color, a wrapper, the shape of a Sunday, and hands you one small taste to find out whether the memory is right.
+Achiote is a food-memory researcher. It reconstructs the dishes your family never wrote down, from a sound-alike, a smell, a color, a wrapper, a Sunday ritual, and hands you one small taste to find out whether the memory is right.
 
 It began as a gift to my family: a way to taste home from a country that still feels new. Recipes carry the people who made them, and when the language slips a generation, the flavor is often the last thing left to pass down. Achiote is for every family that carried a kitchen across a border, and for the kids who have the taste but not the words.
 
