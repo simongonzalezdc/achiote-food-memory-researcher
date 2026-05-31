@@ -3,6 +3,12 @@
 > **Status: SHIPPED and LIVE** at https://achiote.kyanitelabs.tech. This document is the
 > authoritative handoff. The design, copy, and guardrails below are **set in stone** — do not
 > change them. Your job (Codex) is **testing and verification**, described in §4.
+>
+> ⚠️ **READ FIRST: [`PRODUCTION-REALITY-REPORT.md`](PRODUCTION-REALITY-REPORT.md)** — a read-only
+> CheckYourself diagnostic. Production Reality Score **44/100**. Headline finding: the core
+> reconstruction experience falls back to a deterministic "anchors" dump on **4/4 live journeys**
+> (P0, see §5). The infra is solid; the product promise degrades in front of real users. No
+> remediation was done — that report is the honest state to fix from.
 
 ---
 
