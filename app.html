@@ -143,10 +143,6 @@
     .app-safety { max-width: 64ch; margin: var(--s2) auto 0; font-size: 0.74rem; line-height: 1.5; color: var(--text-2); text-align: center; }
     .footer-safety { margin: var(--s3) 0 0; max-width: 720px; font-size: 0.78rem; line-height: 1.5; color: var(--text-2); }
 
-    .auth-row { display: none; margin: var(--s3) auto 0; max-width: 460px; gap: var(--s2); align-items: center; flex-wrap: wrap; justify-content: center; }
-    .auth-row.show { display: flex; }
-    .auth-row .hint { flex: 1 1 100%; text-align: center; font-size: 0.82rem; color: var(--gold); }
-    .auth-row input { padding: 10px 14px; border: 1px solid var(--line-strong); border-radius: var(--r-btn); font: inherit; background: #fffdf8; min-width: 200px; }
 
     @media (max-width: 560px) {
       .msg.user { max-width: 92%; }
@@ -200,11 +196,6 @@
           <button id="send-btn" type="button" aria-label="Send">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
           </button>
-        </div>
-        <div class="auth-row" id="auth-row">
-          <span class="hint">This demo is gated. Enter the demo password to continue:</span>
-          <input id="demo-password" type="password" placeholder="Demo password" autocomplete="off" />
-          <button class="btn btn-ghost" id="auth-continue" type="button">Continue</button>
         </div>
         <p class="app-note">Free · no signup · your words stay your words</p>
         <p class="app-safety">Not medical, allergy, or nutritional advice. Achiote cannot guarantee any food is safe for you. Check ingredients yourself, ask a qualified professional about allergies or dietary needs, and taste at your own risk.</p>

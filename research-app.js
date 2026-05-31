@@ -15,13 +15,9 @@
   var sendBtn  = $('send-btn');
   var micBtn   = $('mic-btn');
   var vstatus  = $('voice-status');
-  var authRow  = $('auth-row');
-  var demoPw   = $('demo-password');
-  var authGo   = $('auth-continue');
 
   var history = [];            // full conversation, sent on every /ask  -> continuity
   var busy = false;
-  var pending = null;          // { aiEl, message } awaiting auth retry
   var recorder = null, chunks = [], voiceReady = false;
 
   /* ----------------------------- helpers ----------------------------- */
@@ -268,10 +264,7 @@
 
   /* ------------------------------ auth ------------------------------- */
   function headers() {
-    var h = { 'Content-Type': 'application/json' };
-    var pw = (demoPw && demoPw.value) || localStorage.getItem('achiote-demo-password') || '';
-    if (pw) { h['x-demo-password'] = pw; try { localStorage.setItem('achiote-demo-password', pw); } catch (e) {} }
-    return h;
+    return { 'Content-Type': 'application/json' };
   }
 
   /* --------------------------- send / run ---------------------------- */
@@ -282,21 +275,9 @@
       headers: headers(),
       body: JSON.stringify({ message: message, history: history, consent: { qualitySignals: false } })
     }).then(function (res) {
-      if (res.status === 401) {
-        pending = { aiEl: aiEl, message: message };
-        clearTyping(aiEl);
-        var n = document.createElement('div');
-        n.className = 'ai-text';
-        n.textContent = 'This demo is gated. Enter the demo password below, then press Continue.';
-        aiEl.appendChild(n);
-        if (authRow) authRow.classList.add('show');
-        if (demoPw) demoPw.focus();
-        throw new Error('auth');
-      }
       if (!res.ok) throw new Error('status ' + res.status);
       return streamInto(res, aiEl, message);
     }).catch(function (err) {
-      if (err && err.message === 'auth') return;
       clearTyping(aiEl);
       var e = document.createElement('div');
       e.className = 'ai-text err';
@@ -383,13 +364,6 @@
     if (e.key === 'Enter' && !e.shiftKey && !busy) { e.preventDefault(); send(); }
   });
   if (micBtn) micBtn.addEventListener('click', toggleMic);
-  if (authGo) authGo.addEventListener('click', function () {
-    if (!pending) { send(); return; }
-    var p = pending; pending = null;
-    if (authRow) authRow.classList.remove('show');
-    p.aiEl.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
-    run(p.aiEl, p.message);
-  });
   Array.prototype.forEach.call(document.querySelectorAll('.suggestion'), function (b) {
     b.addEventListener('click', function () { send(b.getAttribute('data-fill') || b.textContent); });
   });
