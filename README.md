@@ -107,7 +107,3 @@ Achiote first collects clues and decides whether it has enough signal. If the me
 ## Limits
 
 Achiote is not medical, legal, or nutrition advice. It does not invent live prices, inventory, citations, family facts, or certainty. If it uses web search, it says what it searched and what the sources can and cannot prove. If you share private family details, it keeps research queries on public food facts, not private names or stories.
-
-## Original Achiote
-
-This folder is the portable model-workspace version of the original Achiote MCP/server workflow. The server version provides structured tools for memory intake, research planning, provenance, dossiers, sourcing/substitution prompts, local speech, Memory Receipts, and minimum viable nostalgia cues. This folder encodes the same workflow as interpretable context, so the researcher can live inside the files no matter which frontier model is reading them.
