@@ -25,8 +25,8 @@
     .app-hero .lead { max-width: 60ch; margin: var(--s4) 0 0; }
 
     /* Conversation thread */
-    #thread { display: flex; flex-direction: column; gap: var(--s5); padding-bottom: var(--s6); }
-    .msg { max-width: 100%; }
+    #thread { display: flex; flex-direction: column; gap: var(--s5); padding-bottom: clamp(208px, 26vh, 288px); }
+    .msg { max-width: 100%; scroll-margin-bottom: clamp(196px, 24vh, 280px); }
     .msg.user {
       align-self: flex-end; max-width: 86%;
       background: var(--achiote); color: var(--text-0);
@@ -36,18 +36,40 @@
     }
     .msg.ai { align-self: flex-start; width: 100%; }
 
-    .ai-text { max-width: 66ch; color: var(--text-1); font-size: var(--step-0, 1.0625rem); line-height: 1.6; text-wrap: pretty; }
+    .ai-text {
+      max-width: 62ch; margin-top: var(--s4); padding: 17px 20px 18px;
+      color: #ddc6a6; font-size: clamp(0.9rem, 0.86rem + 0.12vw, 0.96rem);
+      line-height: 1.62; text-wrap: pretty;
+      background:
+        linear-gradient(145deg, rgba(252,239,218,0.085), rgba(252,239,218,0.032)),
+        rgba(32, 16, 9, 0.46);
+      border: 1px solid rgba(252,239,218,0.15);
+      border-left: 3px solid rgba(234,165,62,0.62);
+      border-radius: var(--r-md);
+      box-shadow:
+        inset 0 1px 0 rgba(252,239,218,0.08),
+        0 16px 36px rgba(0,0,0,0.22);
+      backdrop-filter: blur(12px) saturate(1.06);
+    }
     .ai-text > :first-child { margin-top: 0; }
     .ai-text > :last-child { margin-bottom: 0; }
-    .ai-text p { margin: 0 0 0.8em; }
-    .ai-text ul, .ai-text ol { margin: 0.4em 0 0.85em; padding-inline-start: 1.4em; }
-    .ai-text li { margin: 0.25em 0; line-height: 1.55; }
+    .ai-text p { margin: 0 0 0.72em; }
+    .ai-text ul, .ai-text ol { margin: 0.35em 0 0.75em; padding-inline-start: 1.2em; }
+    .ai-text li { margin: 0.2em 0; line-height: 1.52; }
     .ai-text li::marker { color: var(--gold); }
-    .ai-text strong { color: var(--text-0); }
+    .ai-text strong { color: #f4dfc0; font-weight: 700; }
     .ai-text em { font-style: italic; }
-    .ai-text h3 { font-family: var(--font-display); font-optical-sizing: auto; font-size: 1.24rem; font-weight: 700; line-height: 1.2; margin: 0.7em 0 0.3em; color: var(--text-0); }
-    .ai-text h4 { font-family: var(--font-display); font-optical-sizing: auto; font-size: 1.06rem; font-weight: 700; line-height: 1.25; margin: 0.6em 0 0.25em; color: var(--text-0); }
-    .ai-text.err { color: var(--gold); }
+    .ai-text h3 {
+      font-family: var(--font-display); font-optical-sizing: auto;
+      font-size: clamp(1.02rem, 0.98rem + 0.16vw, 1.1rem); font-weight: 700;
+      line-height: 1.25; margin: 0.55em 0 0.25em; color: #f4dfc0;
+    }
+    .ai-text h4 {
+      font-family: var(--font-display); font-optical-sizing: auto;
+      font-size: 0.96rem; font-weight: 700; line-height: 1.25;
+      margin: 0.5em 0 0.22em; color: #f4dfc0;
+    }
+    .ai-text.err { color: #f4cd82; }
 
     /* Typing indicator */
     .typing { display: inline-flex; gap: 5px; padding: 6px 2px; }
@@ -104,21 +126,27 @@
     .suggestion:hover .sug-tag { color: var(--text-0); border-color: rgba(252,239,218,0.4); }
 
     /* Persistent composer */
-    .composer { position: sticky; bottom: 0; z-index: 5; padding: var(--s3) 0 var(--s5);
-      background: transparent; }
+    .composer {
+      position: sticky; bottom: 0; z-index: 5; padding: var(--s4) 0 var(--s5);
+      background:
+        linear-gradient(180deg, rgba(29,14,8,0), rgba(29,14,8,0.9) 34%, rgba(29,14,8,0.98));
+      backdrop-filter: blur(6px);
+    }
     .composer-bar {
       display: flex; align-items: flex-end; gap: var(--s2);
-      background: #fffdf8; border: 1px solid var(--line-strong); border-radius: var(--r-lg);
+      background: #fff7e8; color: #2a1a0f;
+      border: 1px solid rgba(252,239,218,0.52); border-radius: var(--r-lg);
       padding: 8px 8px 8px 16px; box-shadow: 0 12px 34px rgba(0,0,0,0.4);
       transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
     }
     .composer-bar:focus-within { border-color: var(--gold); box-shadow: 0 0 0 4px rgba(216,71,42,0.16), 0 12px 34px rgba(0,0,0,0.4); }
     #composer-input {
       flex: 1; border: 0; outline: none; background: transparent; resize: none;
-      font: inherit; font-size: 1.04rem; line-height: 1.5; color: var(--text-0);
+      font: inherit; font-size: 0.98rem; line-height: 1.48; color: #2a1a0f;
+      caret-color: var(--achiote-deep);
       min-height: 30px; max-height: 168px; padding: 9px 0;
     }
-    #composer-input::placeholder { color: #a8967f; }
+    #composer-input::placeholder { color: #876d50; opacity: 1; }
     .icon-btn {
       flex: 0 0 auto; width: 44px; height: 44px; display: inline-grid; place-items: center;
       border-radius: var(--r-btn); cursor: pointer; border: 1px solid var(--line-strong);
@@ -139,6 +167,7 @@
     #send-btn svg { width: 20px; height: 20px; }
 
     .voice-status { min-height: 1.1em; margin: 0 0 6px; font-size: 0.78rem; color: var(--text-2); text-align: center; }
+    .composer-copy { width: min(820px, calc(100% - 40px)); margin: 0 auto var(--s5); }
     .app-note { margin: var(--s2) 0 0; font-size: 0.78rem; color: var(--text-2); text-align: center; }
     .app-safety { max-width: 64ch; margin: var(--s2) auto 0; font-size: 0.74rem; line-height: 1.5; color: var(--text-2); text-align: center; }
     .footer-safety { margin: var(--s3) 0 0; max-width: 720px; font-size: 0.78rem; line-height: 1.5; color: var(--text-2); }
@@ -146,6 +175,8 @@
 
     @media (max-width: 560px) {
       .msg.user { max-width: 92%; }
+      .ai-text { padding: 15px 16px 16px; font-size: 0.9rem; }
+      #thread { padding-bottom: 244px; }
       .receipt-paper { padding: var(--s5) 18px; }
     }
   </style>
@@ -197,9 +228,11 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
           </button>
         </div>
-        <p class="app-note">Free · no signup · your words stay your words</p>
-        <p class="app-safety">Not medical, allergy, or nutritional advice. Achiote cannot guarantee any food is safe for you. Check ingredients yourself, ask a qualified professional about allergies or dietary needs, and taste at your own risk.</p>
       </div>
+    </div>
+    <div class="composer-copy">
+      <p class="app-note">Free · no signup · your words stay your words</p>
+      <p class="app-safety">Not medical, allergy, or nutritional advice. Achiote cannot guarantee any food is safe for you. Check ingredients yourself, ask a qualified professional about allergies or dietary needs, and taste at your own risk.</p>
     </div>
   </main>
 

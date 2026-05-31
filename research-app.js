@@ -71,7 +71,9 @@
     return null;
   }
   function scrollDown() {
-    if (thread) thread.scrollTop = thread.scrollHeight;
+    if (!thread) return;
+    var target = thread.lastElementChild || thread;
+    if (target && target.scrollIntoView) target.scrollIntoView({ block: 'end', inline: 'nearest' });
   }
 
   /* --------------------------- chat messages ------------------------- */
