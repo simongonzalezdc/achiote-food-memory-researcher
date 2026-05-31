@@ -120,11 +120,35 @@ For each page (`/`, `/meaning.html`, `/week6.html`, `/app.html`):
 
 ---
 
-## 5. Known follow-ups (safe, optional)
-- The app's `/ask` sometimes returns the **deterministic fallback** ("User-said anchors: …")
-  instead of warm model-synthesized prose (GLM synthesis intermittently falls back). Improving
-  the synthesis reliability and/or the inline question-extraction formatting is the next quality
-  win. Not a blocker.
+## 5. P0 — MUST FIX (owner's rule: a deterministic fallback in ANY operator journey is a failure)
+
+**Symptom (confirmed via live trace):** `/ask` falls back to the **deterministic "anchors" dump**
+("User-said anchors: … Researched facts: … Basis before substitutions: …") instead of synthesized
+prose. When this happens the user is **never shown a usable substitutes list or a where-to-buy-nearby
+guide**, even though the tools ran.
+
+**Root cause:**
+- `find_sensory_substitutes` and `source_ingredients` are **prompt-only** — each returns a
+  `promptForAgent` for the host model to turn into the substitutes/sourcing answer, NOT the data
+  itself. So the user-facing list depends entirely on the model's FINAL synthesis.
+- After the 8-tool chain, GLM's final synthesis comes back empty/stalled, so the server emits the
+  deterministic builder (`buildMinimumCueCompletedResponse`) and the `promptForAgent`s are never
+  acted on.
+- Secondary: the tools were called for the wrong ingredient ("chocolate" instead of the user's
+  "chilhuacle chiles") — clue-extraction / tool-arg targeting also needs a fix.
+
+**Fix plan:**
+1. `achiote/src/http-server.ts` `handleAsk`: when the plan includes `find_sensory_substitutes` /
+   `source_ingredients`, run a **dedicated final-synthesis model call** fed those tools'
+   `promptForAgent` outputs, instructed to output (a) a concrete substitutes list and (b) a
+   where-to-buy-near-{location} guide in warm human prose. Only fall back if THAT also fails, and
+   even then present substitutes + sourcing, never the raw "anchors" labels.
+2. Fix ingredient targeting so the substitute/source tools receive the ingredient the user asked
+   to replace.
+3. Verify with `codex-smoke-test.sh` (now hard-fails on the deterministic signature) across
+   journeys: nostalgia reconstruction, dietary substitution, explicit sourcing.
+
+## 5b. Other follow-ups (optional)
 - The expanded reference data is in the repo + image; the live SQLite cache is **not re-seeded**
   with the new fixtures (runtime still leans on live web search + model knowledge). Re-seeding via
   the operator script is optional.

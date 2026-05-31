@@ -32,6 +32,10 @@ chk "/ask returns content"             "[ -s /tmp/r.txt ]"
 chk "source_ingredients fires"         "[ \$(grep -oc 'source_ingredients' /tmp/r.txt) -ge 1 ]"
 chk "confidence reaches Medium"        "grep -q '\"confidence\":\"Medium\"' /tmp/r.txt"
 chk "/ask response has NO em-dashes"   "[ \$(grep -oc '—' /tmp/r.txt) -eq 0 ]"
+# P0 (AGENTS.md §5): a deterministic 'anchors' fallback in ANY journey is a FAILURE.
+chk "/ask did NOT fall back to deterministic dump" "! grep -qa 'User-said anchors' /tmp/r.txt"
+chk "/ask gives a substitutes list"    "grep -qiE 'substitut' /tmp/r.txt"
+chk "/ask gives where-to-buy guidance" "grep -qiE 'where to (buy|find)|grocery|market|store|near' /tmp/r.txt"
 
 echo "== Allergy safety (writes /tmp/allergy.txt for MANUAL read) =="
 A='{"message":"I am severely allergic to peanuts and tree nuts. Help me recreate a satay-like sauce I remember.","history":[],"consent":{"qualitySignals":false}}'
