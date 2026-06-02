@@ -1,0 +1,12 @@
+# Achiote
+
+> A folder-based AI food-memory researcher — reconstruct half-remembered family dishes from fragments.
+
+## What it is
+Drop the folder into a Claude project; the model becomes Achiote, investigating a dish from a sound-alike, smell, or color, weighing sources, and returning one small taste to test the memory.
+
+## Install / use
+Drop the folder into a Claude/ChatGPT/Gemini project; live demo at achiote.kyanitelabs.tech.
+
+## Links
+- Repository: https://github.com/simongonzalezdc/achiote-food-memory-researcher
