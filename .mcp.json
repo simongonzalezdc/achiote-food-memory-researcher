@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "achiote-food-memory-researcher": {
+      "command": "python3",
+      "args": ["tools/achiote_mcp.py"]
+    }
+  }
+}

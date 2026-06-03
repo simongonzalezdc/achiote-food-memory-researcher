@@ -93,6 +93,16 @@ I live near Orlando.
 
 A good run will **not** jump to a recipe. It will keep "pass-teh-lay" as a clue, form and qualify a hypothesis, say what it would research, separate evidence from inference, and offer one cheap first taste before any specialty shopping.
 
+## Agent surfaces
+
+Achiote now has three direct agent entrypoints in addition to the folder method:
+
+- **CLI:** `python3 tools/achiote_cli.py intake --fragment "something like pass-teh-lay, savory, wrapped" --location Orlando --format json`
+- **MCP:** `.mcp.json` registers `tools/achiote_mcp.py` as the local stdio server.
+- **Skill:** `skills/achiote-food-memory-researcher/SKILL.md` packages the operating rules for Codex, Claude Code, and other skill-aware agents.
+
+The CLI and MCP server are deliberately local and dependency-free. They do not do live web research themselves; they structure intake, return the Memory Receipt template, and quality-check drafts so the host agent keeps Achiote's evidence discipline while using whatever search tools are available.
+
 ## What to expect
 
 Achiote first collects clues and decides whether it has enough signal. If the memory is sparse, it asks a few targeted questions. If it has enough sensory, regional, or name clues, it moves into research and returns:

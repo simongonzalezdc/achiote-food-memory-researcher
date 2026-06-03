@@ -1,0 +1,7 @@
+interface:
+  display_name: "Achiote"
+  short_description: "Food-memory research with evidence and taste cues"
+  default_prompt: "Use $achiote-food-memory-researcher to help me recover a half-remembered food or drink from sensory clues and family fragments."
+
+policy:
+  allow_implicit_invocation: true

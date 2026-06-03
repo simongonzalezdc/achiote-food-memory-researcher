@@ -11,32 +11,36 @@ permissions:
 
 jobs:
   validate:
-    name: Validate static site + folder
+    name: Validate researcher folder + agent surfaces
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node
-        uses: actions/setup-node@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          node-version: "20"
+          python-version: "3.12"
 
       - name: Required files exist
         run: |
           set -euo pipefail
           required=(
-            index.html
-            app.html
-            week6.html
-            site.css
             README.md
+            llms.txt
             identity.md
             rules.md
             examples.md
+            .mcp.json
+            tools/achiote_cli.py
+            tools/achiote_mcp.py
+            skills/achiote-food-memory-researcher/SKILL.md
+            skills/achiote-food-memory-researcher/agents/openai.yaml
             reference/workflow.md
             reference/evidence-ledger.md
             reference/source-quality-ladder.md
+            reference/source-list.md
+            reference/dish-family-thinking.md
             reference/sensory-mechanisms.md
             reference/local-access-playbook.md
             reference/language-switching.md
@@ -48,31 +52,25 @@ jobs:
           done
           [ "$missing" -eq 0 ] && echo "All required files present."
 
-      - name: HTML sanity (doctype, title, closing tags)
+      - name: Python agent tools parse
         run: |
           set -euo pipefail
-          for f in index.html app.html week6.html; do
-            grep -qi "<!doctype html>" "$f" || { echo "::error file=$f::missing <!doctype html>"; exit 1; }
-            grep -qi "</html>" "$f"         || { echo "::error file=$f::missing </html>"; exit 1; }
-            grep -qi "<title>" "$f"         || { echo "::error file=$f::missing <title>"; exit 1; }
-          done
-          echo "HTML sanity passed."
+          python3 -m py_compile tools/achiote_cli.py tools/achiote_mcp.py
 
-      - name: App script parses (no syntax errors)
+      - name: CLI smoke
         run: |
           set -euo pipefail
-          node --check research-app.js
-          echo "research-app.js parses OK"
+          python3 tools/achiote_cli.py intake \
+            --fragment "something like pass-teh-lay, savory, wrapped" \
+            --location Orlando \
+            --format json | grep -q "minimum_viable_cue"
+          python3 tools/achiote_mcp.py --self-test | grep -q "achiote_intake"
 
-      - name: Endpoint consistency (app must call /ask, never /api/ask)
+      - name: Skill metadata sanity
         run: |
           set -euo pipefail
-          if grep -rn "api/ask" --include=*.html --include=*.js --include=*.md .; then
-            echo "::error::Found /api/ask reference; the live server endpoint is /ask"
-            exit 1
-          fi
-          grep -Eq "['\"]\/ask['\"]" research-app.js || { echo "::error file=research-app.js::app must POST to /ask"; exit 1; }
-          echo "Endpoint usage consistent."
+          grep -q "^name: achiote-food-memory-researcher" skills/achiote-food-memory-researcher/SKILL.md
+          grep -q 'display_name: "Achiote"' skills/achiote-food-memory-researcher/agents/openai.yaml
 
       - name: No leaked secrets
         run: |
@@ -94,10 +92,3 @@ jobs:
             exit 1
           fi
           echo "No process leak."
-
-      - name: Python demo script parses
-        run: |
-          set -euo pipefail
-          if [ -f demo/build_video.py ]; then
-            python3 -c "import ast,sys; ast.parse(open('demo/build_video.py').read()); print('demo/build_video.py parses OK')"
-          fi
