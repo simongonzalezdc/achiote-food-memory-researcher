@@ -8,5 +8,15 @@ Drop the folder into a Claude project; the model becomes Achiote, investigating 
 ## Install / use
 Drop the folder into a Claude/ChatGPT/Gemini project; live demo at achiote.kyanitelabs.tech.
 
+## Agent surfaces
+- CLI: `python3 tools/achiote_cli.py intake --fragment "..." --location "..." --format json`
+- MCP: `.mcp.json` exposes the local stdio server at `tools/achiote_mcp.py`
+- Skill: `skills/achiote-food-memory-researcher/SKILL.md`
+
+## MCP tools
+- `achiote_intake`: structure a fragment into clues, sufficiency, and next questions
+- `achiote_memory_receipt_template`: return the required Memory Receipt outline
+- `achiote_quality_gate`: check a draft for evidence and minimum viable cue sections
+
 ## Links
 - Repository: https://github.com/simongonzalezdc/achiote-food-memory-researcher
