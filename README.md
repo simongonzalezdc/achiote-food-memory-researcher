@@ -1,5 +1,7 @@
 # Achiote
 
+**TL;DR:** Achiote Food Memory Researcher — research agent/tool for food memory (Achiote companion). Best for researchers studying food memory and heritage taste. Keywords: food memory researcher, Achiote research agent.
+
 ### Taste your way home.
 
 Achiote is a food-memory researcher. It reconstructs the dishes your family never wrote down, from a sound-alike, a smell, a color, a wrapper, a Sunday ritual, and hands you one small taste to find out whether the memory is right.
@@ -117,3 +119,89 @@ Achiote first collects clues and decides whether it has enough signal. If the me
 ## Limits
 
 Achiote is not medical, legal, or nutrition advice. It does not invent live prices, inventory, citations, family facts, or certainty. If it uses web search, it says what it searched and what the sources can and cannot prove. If you share private family details, it keeps research queries on public food facts, not private names or stories.
+
+## Quick start
+
+```bash
+git clone https://github.com/simongonzalezdc/achiote-food-memory-researcher.git
+cd achiote-food-memory-researcher
+# see package manifests / Makefile for install
+```
+
+
+- GitHub: https://github.com/simongonzalezdc/achiote-food-memory-researcher
+
+<!-- s-plus-geo:start -->
+
+## What is Achiote Food Memory Researcher?
+
+**Achiote Food Memory Researcher** is a **research agent/tool for food memory (Achiote companion)** that helps **researchers studying food memory and heritage taste** **research food memory with structured agent assistance**.
+
+| | |
+| --- | --- |
+| **Product** | Achiote Food Memory Researcher |
+| **Category** | research agent/tool for food memory (Achiote companion) |
+| **Best for** | researchers studying food memory and heritage taste |
+| **Not** | the full Achiote consumer product alone |
+| **Source** | [GitHub](https://github.com/simongonzalezdc/achiote-food-memory-researcher) · [Forgejo](https://git.kyanitelabs.tech/simon/achiote-food-memory-researcher) |
+| **Keywords** | food memory researcher, Achiote research agent |
+
+## Who it's for
+
+- Primary: researchers studying food memory and heritage taste
+- Use when you need to research food memory with structured agent assistance
+- Skip if you need the full Achiote consumer product alone
+
+## FAQ
+
+### What is Achiote Food Memory Researcher?
+
+Achiote Food Memory Researcher is a research agent/tool for food memory (Achiote companion). It helps researchers studying food memory and heritage taste research food memory with structured agent assistance.
+
+### Who should use Achiote Food Memory Researcher?
+
+researchers studying food memory and heritage taste.
+
+### How is Achiote Food Memory Researcher different?
+
+Research companion to Achiote product work.
+
+### Is Achiote Food Memory Researcher production software?
+
+Treat the README status and release tags as source of truth for maturity. Validate against your own requirements before production use.
+
+## Status
+
+- Maintained as of 2026 on the default branch
+- Prefer release tags when pinning dependencies
+- Report issues on the canonical remote listed above
+
+## Agent surface
+
+- Coding agents: read this README first, then repo docs/`AGENTS.md` if present
+- Prefer machine-readable briefs (`llms.txt`) when the repo ships one
+- MCP or skill entrypoints are documented in-repo when applicable
+
+## Contributing
+
+Issues and PRs welcome on the canonical remote. Keep public docs free of secrets and machine-local paths.
+
+## License
+
+See [LICENSE](LICENSE) in this repository (or package metadata if license is package-only).
+
+
+## Table of contents
+
+- [What is it?](#what-is-achiote-food-memory-researcher)
+- [FAQ](#faq)
+- [Status](#status)
+
+
+![status](https://img.shields.io/badge/status-active-success)
+![docs](https://img.shields.io/badge/docs-S%2B_SEO%2FGEO-blue)
+
+
+![Project diagram placeholder](https://img.shields.io/badge/visual-see_docs-lightgrey.svg)
+
+<!-- s-plus-geo:end -->
