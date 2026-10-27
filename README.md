@@ -143,7 +143,7 @@ cd achiote-food-memory-researcher
 | **Category** | research agent/tool for food memory (Achiote companion) |
 | **Best for** | researchers studying food memory and heritage taste |
 | **Not** | the full Achiote consumer product alone |
-| **Source** | [GitHub](https://github.com/simongonzalezdc/achiote-food-memory-researcher) · [Forgejo](https://git.kyanitelabs.tech/simon/achiote-food-memory-researcher) |
+| **Source** | [GitHub](https://github.com/simongonzalezdc/achiote-food-memory-researcher) |
 | **Keywords** | food memory researcher, Achiote research agent |
 
 ## Who it's for
